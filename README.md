@@ -20,8 +20,8 @@ In order to build qword, make sure to have the following installed:
 ## Building
 ```bash
 # Clone repo wherever you like
-git clone https://github.com/qword-os/build.git
-cd qword/host
+git clone https://github.com/qword-os/build.git qword-build
+cd qword-build/host
 # Let's first build and install the echfs-utils
 git clone https://github.com/qword-os/echfs.git
 cd echfs
