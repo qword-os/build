@@ -1,3 +1,4 @@
+# System root.
 /root/*
 !/root/bin
 /root/bin/*
@@ -9,17 +10,15 @@
 !/root/boot
 /root/etc/localtime
 
+# Packages.
 /**/*.tar.bz2
 /**/*.tar.gz
+
+# Produced images and qword
+/qword
 /qword.hdd
 
-/**/*.o
-/**/*.a
-/**/*.bin
-/**/*.elf
-
-/bochsout.txt
-/bx_enh_dbg.ini
+# Toolchain.
 /host/echfs-utils/echfs-utils
 /host/toolchain/build-toolchain
 /host/toolchain/cross-root
