@@ -1,6 +1,15 @@
+# Accepted host OSes else fail.
+OS := $(shell uname)
+ifeq      ($(OS), Linux)
+else ifeq ($(OS), FreeBSD)
+else
+$(error Host OS $(OS) is not supported.)
+endif
+
 # User variables
-SHELL  = /bin/bash
 PREFIX = $(shell pwd)/root
+# -- Image size in M.
+IMGSIZE = 4096
 
 # Add toolchain to PATH
 PATH := $(shell pwd)/host/toolchain/cross-root/bin:$(PATH)
@@ -11,29 +20,23 @@ QWORD_REPO := https://github.com/qword-os/qword.git
 
 .PHONY: all clean hdd run run-nokvm
 
-all:
+all: $(QWORD_DIR)
+	$(MAKE) -C $(QWORD_DIR) install CC=x86_64-qword-gcc PREFIX=$(PREFIX)
+
+clean: $(QWORD_DIR)
+	$(MAKE) -C $(QWORD_DIR) clean
+
+$(QWORD_DIR):
 	git clone $(QWORD_REPO) $(QWORD_DIR)
-	cd $(QWORD_DIR) && $(MAKE) install CC=x86_64-qword-gcc PREFIX=$(shell pwd)/root && cd ..
-	cp -v /etc/localtime ./root/etc/
 
-clean:
-	cd $(QWORD_DIR) && $(MAKE) uninstall PREFIX=$(shell pwd)/root && cd ..
-	cd $(QWORD_DIR) && $(MAKE) clean                              && cd ..
-	rm -rf $(QWORD_DIR) qword.hdd
-
-# Image creation.
-IMGSIZE := 4096
-OS      := $(shell uname)
-
-# Special image creation for each OS.
-ifeq ($(OS), FreeBSD)
-hdd: all
-	# Left for mint.
-
-else ifeq ($(OS), Linux)
+ifeq ($(OS), Linux)
 LOOP_DEVICE := $(shell losetup --find)
+else ifeq ($(OS), FreeBSD)
+LOOP_DEVICE := md9
+endif
 
 hdd: all
+ifeq ($(OS), Linux)
 	sudo -v
 	rm -rf qword.part
 	fallocate -l $(IMGSIZE)M qword.part
@@ -54,11 +57,32 @@ hdd: all
 	sudo bash -c "cat qword.part > $(LOOP_DEVICE)p2"
 	sudo losetup -d $(LOOP_DEVICE)
 	rm qword.part
-
-else
-hdd: all
-	@echo "Cannot create a bootable image in '$(OS)'"
-
+else ifeq ($(OS), FreeBSD)
+	sudo -v
+	rm -rf qword.part
+	dd if=/dev/zero bs=1M count=0 seek=$(IMGSIZE) of=qword.part
+	echfs-utils ./qword.part quick-format 32768
+	./copy-root-to-img.sh root qword.part
+	rm -rf qword.hdd
+	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 65 )) of=qword.hdd
+	sudo mdconfig -a -t vnode -f qword.hdd -u $(LOOP_DEVICE)
+	sudo gpart create -s mbr $(LOOP_DEVICE)
+	sudo mdconfig -d -u $(LOOP_DEVICE)
+	dd if=./syslinux/mbr.bin of=qword.hdd conv=notrunc
+	sudo mdconfig -a -t vnode -f qword.hdd -u $(LOOP_DEVICE)
+	sudo gpart add -t '!14' -s 64M $(LOOP_DEVICE)
+	sudo gpart add -t '!14' $(LOOP_DEVICE)
+	sudo gpart set -a active -i 1 $(LOOP_DEVICE)
+	sudo newfs_msdos /dev/$(LOOP_DEVICE)s1
+	sudo syslinux -f -i /dev/$(LOOP_DEVICE)s1
+	sudo rm -rf ./mnt && sudo mkdir mnt
+	sudo mount -t msdosfs /dev/$(LOOP_DEVICE)s1 ./mnt
+	sudo cp -r ./root/boot/* ./mnt/
+	sudo umount /dev/$(LOOP_DEVICE)s1
+	sudo rm -rf ./mnt
+	sudo dd bs=4M if=qword.part of=/dev/$(LOOP_DEVICE)s2 status=progress
+	sudo mdconfig -d -u $(LOOP_DEVICE)
+	rm qword.part
 endif
 
 # Emulation settings
