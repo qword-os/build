@@ -14,7 +14,7 @@ QWORD_REPO := https://github.com/qword-os/qword.git
 .PHONY: all clean hdd run run-nokvm
 
 all:
-	# git clone $(QWORD_REPO) $(QWORD_DIR)
+	git clone $(QWORD_REPO) $(QWORD_DIR)
 	cd $(QWORD_DIR) && $(MAKE) install PREFIX=$(shell pwd)/root && cd ..
 	cp -v /etc/localtime ./root/etc/
 
