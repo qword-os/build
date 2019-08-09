@@ -2,8 +2,6 @@
 SHELL  = /bin/bash
 PREFIX = $(shell pwd)/root
 
-LOOP_DEVICE = $(shell losetup --find)
-
 # Add toolchain to PATH
 PATH := $(shell pwd)/host/toolchain/cross-root/bin:$(PATH)
 
@@ -25,6 +23,15 @@ clean:
 
 # Image creation.
 IMGSIZE := 4096
+OS      := $(shell uname)
+
+# Special image creation for each OS.
+ifeq ($(OS), FreeBSD)
+hdd: all
+	# Left for mint.
+
+else ifeq ($(OS), Linux)
+LOOP_DEVICE := $(shell losetup --find)
 
 hdd: all
 	sudo -v
@@ -48,15 +55,25 @@ hdd: all
 	sudo losetup -d $(LOOP_DEVICE)
 	rm qword.part
 
+else
+hdd: all
+	@echo "Cannot create a bootable image in '$(OS)'"
+
+endif
+
 # Emulation settings
-QEMU_FLAGS := $(QEMU_FLAGS) \
-	-m 2G \
-	-net none \
-	-debugcon stdio \
-	-d cpu_reset
+QEMU_FLAGS := $(QEMU_FLAGS)                          \
+	-m 2G                                            \
+	-net none                                        \
+	-debugcon stdio                                  \
+	-d cpu_reset                                     \
+	-device ahci,id=ahci                             \
+	-drive if=none,id=disk,file=qword.hdd,format=raw \
+	-device ide-drive,drive=disk,bus=ahci.0          \
+	-smp sockets=1,cores=4,threads=1
 
 run:
-	qemu-system-x86_64 $(QEMU_FLAGS) -device ahci,id=ahci -drive if=none,id=disk,file=qword.hdd,format=raw -device ide-drive,drive=disk,bus=ahci.0 -smp sockets=1,cores=4,threads=1 -enable-kvm
+	qemu-system-x86_64 $(QEMU_FLAGS) -enable-kvm
 
 run-nokvm:
-	qemu-system-x86_64 $(QEMU_FLAGS) -device ahci,id=ahci -drive if=none,id=disk,file=qword.hdd,format=raw -device ide-drive,drive=disk,bus=ahci.0 -smp sockets=1,cores=4,threads=1
+	qemu-system-x86_64 $(QEMU_FLAGS)
