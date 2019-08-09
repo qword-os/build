@@ -15,7 +15,7 @@ QWORD_REPO := https://github.com/qword-os/qword.git
 
 all:
 	git clone $(QWORD_REPO) $(QWORD_DIR)
-	cd $(QWORD_DIR) && $(MAKE) install PREFIX=$(shell pwd)/root && cd ..
+	cd $(QWORD_DIR) && $(MAKE) install CC=x86_64-qword-gcc PREFIX=$(shell pwd)/root && cd ..
 	cp -v /etc/localtime ./root/etc/
 
 clean:
