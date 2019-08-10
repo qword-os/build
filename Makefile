@@ -40,6 +40,8 @@ hdd: all
 	rm -rf qword.part
 	dd if=/dev/zero bs=1M count=0 seek=$(IMGSIZE) of=qword.part
 	echfs-utils ./qword.part quick-format 32768
+	cp -v /etc/localtime root/etc/
+	chmod 644 root/etc/localtime
 	./copy-root-to-img.sh root qword.part
 	rm -rf qword.hdd
 	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 65 )) of=qword.hdd
