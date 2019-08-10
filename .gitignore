@@ -10,6 +10,10 @@
 !/root/boot
 /root/etc/localtime
 
+# Executables
+/**/*.bin
+/**/*.elf
+
 # Packages.
 /**/*.tar.bz2
 /**/*.tar.gz
