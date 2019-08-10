@@ -12,7 +12,7 @@ if [ ! -d "$1" ]; then
     exit 1
 fi
 
-if [ ! -f "$2" && ! -b "$2" ]; then
+if [ ! -f "$2" ] && [ ! -b "$2" ]; then
     echo "File '$2' not found"
     exit 1
 fi
