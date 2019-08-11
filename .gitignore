@@ -23,6 +23,6 @@
 /qword.hdd
 
 # Toolchain.
-/host/echfs-utils/echfs-utils
+/host/echfs
 /host/toolchain/build-toolchain
 /host/toolchain/cross-root
