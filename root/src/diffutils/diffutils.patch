@@ -1,0 +1,12 @@
+diff -urN diffutils-3.7/build-aux/config.sub diffutils-3.7-patched/build-aux/config.sub
+--- diffutils-3.7/build-aux/config.sub	2018-12-24 02:21:56.000000000 +0100
++++ diffutils-3.7-patched/build-aux/config.sub	2019-08-11 17:04:36.052183759 +0200
+@@ -1361,7 +1361,7 @@
+ 	     | powermax* | dnix* | nx6 | nx7 | sei* | dragonfly* \
+ 	     | skyos* | haiku* | rdos* | toppers* | drops* | es* \
+ 	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
+-	     | midnightbsd* | amdhsa* | unleashed*)
++	     | midnightbsd* | amdhsa* | unleashed* | qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	qnx*)
