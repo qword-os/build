@@ -1,0 +1,24 @@
+PKG_NAME=qfetch
+PKG_VERSION=NaN
+PKG_URL=https://github.com/qword-os/qfetch.git
+PKG_ARCHIVE_DIR=$PKG_NAME
+PKG_PREFIX=/usr/bin
+PKG_DEPS="mlibc"
+
+pkg_fetch() {
+    git clone $PKG_URL || true
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    make CC=x86_64-qword-gcc
+}
+
+pkg_install() {
+    cd $PKG_ARCHIVE_DIR
+    make DESTDIR=$QWORD_ROOT PREFIX=$PKG_PREFIX install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}

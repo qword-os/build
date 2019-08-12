@@ -7,6 +7,3 @@ HISTFILESIZE=-1
 export TERM=linux
 alias ls="ls --color=auto"
 alias clear='printf "\e[2J"'
-
-# [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
-#     . /usr/share/bash-completion/bash_completion
