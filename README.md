@@ -2,6 +2,10 @@
 
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
+## Donations
+
+We welcome any kind of donations in our official patreon: https://www.patreon.com/qwordOS
+
 ## Talk to us!
 We have a [Discord server](https://discord.gg/RnCtsqD) with all the developers for any question, support, contribution, or just chat!
 
