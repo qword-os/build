@@ -6,7 +6,7 @@ set -x
 CROSS_ROOT="$(pwd)/cross-root"
 TARGET_ROOT="$(realpath ../..)/root"
 TARGET=x86_64-qword
-GCCVERSION=9.1.0
+GCCVERSION=9.2.0
 BINUTILSVERSION=2.32
 
 if [ -z "$MAKEFLAGS" ]; then
