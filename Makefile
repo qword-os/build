@@ -50,7 +50,7 @@ ifeq ($(OS), Linux)
 	cp -v /etc/localtime root/etc/
 	chmod 644 root/etc/localtime
 	sudo ./copy-root-to-img.sh root $(LOOP_DEVICE)p2
-	sudo mkfs.fat $(LOOP_DEVICE)p1
+	sudo mkfs.fat -F 32 $(LOOP_DEVICE)p1
 	sudo syslinux -f -i $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
@@ -77,7 +77,7 @@ else ifeq ($(OS), FreeBSD)
 	sudo gpart add -a 4k -t '!14' -s 64M $(LOOP_DEVICE)
 	sudo gpart add -a 4k -t '!14' $(LOOP_DEVICE)
 	sudo gpart set -a active -i 1 $(LOOP_DEVICE)
-	sudo newfs_msdos /dev/$(LOOP_DEVICE)s1
+	sudo newfs_msdos -F32 /dev/$(LOOP_DEVICE)s1
 	sudo syslinux -f -i /dev/$(LOOP_DEVICE)s1
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo mount -t msdosfs /dev/$(LOOP_DEVICE)s1 ./mnt
