@@ -1,0 +1,31 @@
+PKG_NAME=libxkbcommon
+PKG_VERSION=0.8.4
+PKG_URL=https://xkbcommon.org/download/$PKG_NAME-$PKG_VERSION.tar.xz
+PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.xz
+PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
+PKG_PREFIX=/usr
+PKG_DEPS="mlibc"
+
+pkg_fetch() {
+    [ -f $PKG_TARBALL ] || wget $PKG_URL
+    [ -d $PKG_ARCHIVE_DIR ] || tar -xf $PKG_TARBALL
+
+    cd $PKG_ARCHIVE_DIR
+    patch -p1 < ../$PKG_NAME.patch
+    patch -p1 < ../$PKG_NAME-build.patch
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    ./configure --host=x86_64-qword --prefix=$PKG_PREFIX --disable-x11
+    make
+}
+
+pkg_install() {
+    cd $PKG_ARCHIVE_DIR
+    make DESTDIR=$QWORD_ROOT install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}
