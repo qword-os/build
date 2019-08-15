@@ -77,7 +77,7 @@ else ifeq ($(OS), FreeBSD)
 	sudo gpart add -a 4k -t '!14' -s 64M $(LOOP_DEVICE)
 	sudo gpart add -a 4k -t '!14' $(LOOP_DEVICE)
 	sudo gpart set -a active -i 1 $(LOOP_DEVICE)
-	sudo newfs_msdos -F32 /dev/$(LOOP_DEVICE)s1
+	sudo newfs_msdos /dev/$(LOOP_DEVICE)s1
 	sudo syslinux -f -i /dev/$(LOOP_DEVICE)s1
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo mount -t msdosfs /dev/$(LOOP_DEVICE)s1 ./mnt
