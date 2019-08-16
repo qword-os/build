@@ -16,7 +16,7 @@ pkg_fetch() {
 
 pkg_build() {
     cd $PKG_ARCHIVE_DIR
-    ./configure --host=x86_64-qword --prefix=$PKG_PREFIX
+    ./configure --host=x86_64-qword --prefix=$PKG_PREFIX --with-sysroot=$QWORD_ROOT
     make
 }
 

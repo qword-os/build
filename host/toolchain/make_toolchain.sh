@@ -6,8 +6,8 @@ set -x
 CROSS_ROOT="$(pwd)/cross-root"
 TARGET_ROOT="$(realpath ../..)/root"
 TARGET=x86_64-qword
-GCCVERSION=9.2.0
 BINUTILSVERSION=2.32
+GCCVERSION=9.2.0
 
 if [ -z "$MAKEFLAGS" ]; then
 	MAKEFLAGS="$1"
@@ -49,6 +49,7 @@ fi
 if [ ! -f gcc-$GCCVERSION.tar.gz ]; then
 	wget https://ftp.gnu.org/gnu/gcc/gcc-$GCCVERSION/gcc-$GCCVERSION.tar.gz
 fi
+
 tar -xf gcc-$GCCVERSION.tar.gz
 tar -xf binutils-$BINUTILSVERSION.tar.gz
 
