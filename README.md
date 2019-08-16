@@ -13,7 +13,7 @@
 ## Build requirements
 In order to build qword, make sure to have the following installed:
  `wget`, `git`, `bash`, `make` (`gmake` on FreeBSD), `patch`, `meson`, `ninja`,
- `xz`, `gzip`, `tar`, `gcc/g++ (8 or higher)`, `nasm`, `autoconf`,
+ `xz`, `gzip`, `tar`, `gcc/g++ (8 or higher)`, `nasm`, `autoconf`, `bison`,
  `parted` (on Linux), `syslinux`, and `qemu` (to test it).
 
 ## Building
