@@ -5,5 +5,7 @@ set -e
 BUILDPORTS=$(echo */def.pkg | sed 's/\/def.pkg//g')
 
 cd ../bin
-./pkg install $BUILDPORTS
+if [ ! "$1" = "clean" ]; then
+    ./pkg install $BUILDPORTS
+fi
 ./pkg clean $BUILDPORTS
