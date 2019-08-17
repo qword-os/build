@@ -24,7 +24,8 @@ pkg_build() {
     ### AWFUL HACK SO IT DOESNT USE FREETYPE
     ### AS IN
     ### BRUH
-    sed -i 's/boilerplate test perf/boilerplate/g' Makefile
+    sed 's/boilerplate test perf/boilerplate/g' < Makefile > Makefile.sed
+    mv Makefile.sed Makefile
 
     make
 }
