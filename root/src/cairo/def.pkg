@@ -1,0 +1,39 @@
+PKG_NAME=cairo
+PKG_VERSION=1.16.0
+PKG_URL=https://www.cairographics.org/releases/$PKG_NAME-$PKG_VERSION.tar.xz
+PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.xz
+PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
+PKG_PREFIX=/usr
+PKG_DEPS="mlibc libpng pixman"
+
+pkg_fetch() {
+    [ -f $PKG_TARBALL ] || wget $PKG_URL
+    [ -d $PKG_ARCHIVE_DIR ] || tar -xf $PKG_TARBALL
+
+    cd $PKG_ARCHIVE_DIR
+    patch -p1 < ../$PKG_NAME.patch
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    FREETYPE_CONFIG=no ./configure --host=x86_64-qword --prefix=$PKG_PREFIX \
+        --enable-xlib=no \
+        --enable-xlib-xrender=no \
+        --enable-xlib-xcb=no
+
+    ### AWFUL HACK SO IT DOESNT USE FREETYPE
+    ### AS IN
+    ### BRUH
+    sed -i 's/boilerplate test perf/boilerplate/g' Makefile
+
+    make
+}
+
+pkg_install() {
+    cd $PKG_ARCHIVE_DIR
+    make DESTDIR=$QWORD_ROOT install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}
