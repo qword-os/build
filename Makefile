@@ -50,7 +50,7 @@ ifeq ($(OS), Linux)
 	cp -v /etc/localtime root/etc/
 	chmod 644 root/etc/localtime
 	sudo ./copy-root-to-img.sh root $(LOOP_DEVICE)p2
-	sudo mkfs.fat -F 32 $(LOOP_DEVICE)p1
+	sudo mkfs.fat $(LOOP_DEVICE)p1
 	sudo syslinux -f -i $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
