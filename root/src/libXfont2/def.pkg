@@ -1,0 +1,39 @@
+PKG_NAME=libXfont2
+PKG_VERSION=2.0.3
+PKG_URL=https://www.x.org/releases/individual/lib/$PKG_NAME-$PKG_VERSION.tar.gz
+PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.gz
+PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
+PKG_PREFIX=/usr
+PKG_DEPS="mlibc xorgproto xtrans libfontenc freetype libpng"
+
+pkg_fetch() {
+    [ -f $PKG_TARBALL ] || wget $PKG_URL
+    [ -d $PKG_ARCHIVE_DIR ] || tar -xf $PKG_TARBALL
+
+    cd $PKG_ARCHIVE_DIR
+    patch -p1 < ../$PKG_NAME.patch
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    echo "Building libXfont2 requires root access because libXfont2 is a BROKEN package which cannot"
+    echo "find libpng16.la unless it is present in /usr/lib."
+    echo "Granting root permission is dangerous, and, while we take precautions to make sure"
+    echo "nothing bad is going to happen, we are NOT RESPONSIBLE for any damage caused."
+    echo "Press enter to proceed at your own risk..."
+    read
+    sudo mv /usr/lib/libpng16.la /usr/lib/libpng16.la.qword_build_backup || true
+    sudo ln -s "$QWORD_ROOT/usr/lib/libpng16.la" /usr/lib/
+    ./configure --host=x86_64-qword --prefix=$PKG_PREFIX --with-sysroot="$QWORD_ROOT"
+    make
+    sudo mv /usr/lib/libpng16.la.qword_build_backup /usr/lib/libpng16.la || true
+}
+
+pkg_install() {
+    cd $PKG_ARCHIVE_DIR
+    make DESTDIR=$QWORD_ROOT install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}
