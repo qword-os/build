@@ -1,0 +1,12 @@
+diff -urN xextproto-7.2.1/config.sub xextproto-7.2.1-patched/config.sub
+--- xextproto-7.2.1/config.sub	2012-03-23 04:54:31.000000000 +0100
++++ xextproto-7.2.1-patched/config.sub	2019-08-26 06:07:19.563419499 +0200
+@@ -1325,7 +1325,7 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)

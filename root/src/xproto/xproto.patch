@@ -1,0 +1,12 @@
+diff -urN xproto-7.0.23/config.sub xproto-7.0.23-patched/config.sub
+--- xproto-7.0.23/config.sub	2012-03-16 07:11:50.000000000 +0100
++++ xproto-7.0.23-patched/config.sub	2019-08-26 05:29:45.251091725 +0200
+@@ -1325,7 +1325,7 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
