@@ -26,6 +26,7 @@ pkg_build() {
     sudo ln -s "$QWORD_ROOT/usr/lib/libpng16.la" /usr/lib/
     ./configure --host=x86_64-qword --prefix=$PKG_PREFIX --with-sysroot="$QWORD_ROOT"
     make
+    sudo rm /usr/lib/libpng16.la
     sudo mv /usr/lib/libpng16.la.qword_build_backup /usr/lib/libpng16.la || true
 }
 
