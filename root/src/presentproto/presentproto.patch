@@ -1,0 +1,12 @@
+diff -urN presentproto-1.1/config.sub presentproto-1.1-patched/config.sub
+--- presentproto-1.1/config.sub	2017-01-26 09:13:38.000000000 +0100
++++ presentproto-1.1-patched/config.sub	2019-08-26 14:59:09.278564307 +0200
+@@ -1409,7 +1409,7 @@
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+ 	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
+-	      | -onefs* | -tirtos* | -phoenix* | -fuchsia*)
++	      | -onefs* | -tirtos* | -phoenix* | -fuchsia* | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
