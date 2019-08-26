@@ -1,0 +1,24 @@
+diff -urN libxcb-1.13.1/build-aux/config.sub libxcb-1.13.1-patched/build-aux/config.sub
+--- libxcb-1.13.1/build-aux/config.sub	2018-09-27 14:05:09.000000000 +0200
++++ libxcb-1.13.1-patched/build-aux/config.sub	2019-08-26 08:31:44.099704402 +0200
+@@ -1390,7 +1390,7 @@
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+ 	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
+ 	      | -onefs* | -tirtos* | -phoenix* | -fuchsia* | -redox* | -bme* \
+-	      | -midnightbsd*)
++	      | -midnightbsd* | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+diff -urN libxcb-1.13.1/src/xcb_conn.c libxcb-1.13.1-patched/src/xcb_conn.c
+--- libxcb-1.13.1/src/xcb_conn.c	2018-09-27 14:02:28.000000000 +0200
++++ libxcb-1.13.1-patched/src/xcb_conn.c	2019-08-26 08:46:21.096692275 +0200
+@@ -38,6 +38,8 @@
+ #include <errno.h>
+ #include <limits.h>
+ 
++#include <arpa/inet.h>
++
+ #include "xcb.h"
+ #include "xcbint.h"
+ #if USE_POLL
