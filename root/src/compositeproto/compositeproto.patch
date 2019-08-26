@@ -1,0 +1,12 @@
+diff -urN compositeproto-0.4.2/config.sub compositeproto-0.4.2-patched/config.sub
+--- compositeproto-0.4.2/config.sub	2010-10-30 05:28:46.000000000 +0200
++++ compositeproto-0.4.2-patched/config.sub	2019-08-26 14:48:53.407726963 +0200
+@@ -1325,7 +1325,7 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
