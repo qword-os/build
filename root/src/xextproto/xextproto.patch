@@ -1,7 +1,7 @@
-diff -urN xextproto-7.2.1/config.sub xextproto-7.2.1-patched/config.sub
---- xextproto-7.2.1/config.sub	2012-03-23 04:54:31.000000000 +0100
-+++ xextproto-7.2.1-patched/config.sub	2019-08-26 06:07:19.563419499 +0200
-@@ -1325,7 +1325,7 @@
+diff -urN xextproto-7.3.0/config.sub xextproto-7.3.0-patched/config.sub
+--- xextproto-7.3.0/config.sub	2010-12-07 04:52:05.000000000 +0100
++++ xextproto-7.3.0-patched/config.sub	2019-08-26 09:37:50.485287462 +0200
+@@ -1309,7 +1309,7 @@
  	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
  	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
  	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \

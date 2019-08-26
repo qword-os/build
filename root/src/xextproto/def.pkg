@@ -1,6 +1,6 @@
 PKG_NAME=xextproto
-PKG_VERSION=7.2.1
-PKG_URL=https://www.x.org/releases/X11R7.7/src/proto/xextproto-$PKG_VERSION.tar.gz
+PKG_VERSION=7.3.0
+PKG_URL=https://www.x.org/releases/individual/proto/$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
 PKG_PREFIX=/usr
