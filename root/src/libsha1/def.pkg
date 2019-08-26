@@ -1,0 +1,25 @@
+PKG_NAME=libsha1
+PKG_VERSION=NaN
+PKG_URL=https://github.com/maandree/$PKG_NAME.git
+PKG_ARCHIVE_DIR=$PKG_NAME
+PKG_PREFIX=/usr
+PKG_DEPS="mlibc"
+
+pkg_fetch() {
+    [ -d $PKG_ARCHIVE_DIR ] || git clone $PKG_URL
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    make
+}
+
+pkg_install() {
+    cp libsha1.pc $QWORD_ROOT/usr/lib/pkgconfig/
+    cd $PKG_ARCHIVE_DIR
+    make DESTDIR=$QWORD_ROOT install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}
