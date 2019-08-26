@@ -1,6 +1,6 @@
 PKG_NAME=xtrans
-PKG_VERSION=1.2.7
-PKG_URL=https://www.x.org/releases/X11R7.7/src/everything/xtrans-$PKG_VERSION.tar.gz
+PKG_VERSION=1.4.0
+PKG_URL=https://www.x.org/releases/individual/lib/$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
 PKG_PREFIX=/usr

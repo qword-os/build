@@ -1,12 +1,12 @@
-diff -urN xtrans-1.2.7/config.sub xtrans-1.2.7-patched/config.sub
---- xtrans-1.2.7/config.sub	2012-03-23 04:04:40.000000000 +0100
-+++ xtrans-1.2.7-patched/config.sub	2019-08-26 06:24:45.322129648 +0200
-@@ -1325,7 +1325,7 @@
- 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
- 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+diff -urN xtrans-1.4.0/config.sub xtrans-1.4.0-patched/config.sub
+--- xtrans-1.4.0/config.sub	2019-03-16 22:30:35.000000000 +0100
++++ xtrans-1.4.0-patched/config.sub	2019-08-26 09:42:13.257283828 +0200
+@@ -1390,7 +1390,7 @@
  	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
--	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
-+	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* | -qword*)
+ 	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
+ 	      | -onefs* | -tirtos* | -phoenix* | -fuchsia* | -redox* | -bme* \
+-	      | -midnightbsd*)
++	      | -midnightbsd* | -qword*)
  	# Remember, each alternative MUST END IN *, to match a version number.
  		;;
  	-qnx*)
