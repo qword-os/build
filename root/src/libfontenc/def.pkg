@@ -4,7 +4,7 @@ PKG_URL=https://www.x.org/releases/individual/lib/$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.gz
 PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION
 PKG_PREFIX=/usr
-PKG_DEPS="mlibc"
+PKG_DEPS="mlibc zlib"
 
 pkg_fetch() {
     [ -f $PKG_TARBALL ] || wget $PKG_URL
