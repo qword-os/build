@@ -1,0 +1,305 @@
+diff -urN xorg-server-1.20.5/Xext/shm.c xorg-server-1.20.5-patched/Xext/shm.c
+--- xorg-server-1.20.5/Xext/shm.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/Xext/shm.c	2019-08-26 18:22:34.665928802 +0200
+@@ -74,6 +74,32 @@
+ #define SHMPERM_ZONEID(p)	p->ipcx_zoneid
+ #else
+ #define SHMSTAT(id, buf) 	shmctl(id, IPC_STAT, buf)
++
++
++struct ipc_perm {
++               key_t          __key;    /* Key supplied to shmget(2) */
++               uid_t          uid;      /* Effective UID of owner */
++               gid_t          gid;      /* Effective GID of owner */
++               uid_t          cuid;     /* Effective UID of creator */
++               gid_t          cgid;     /* Effective GID of creator */
++               unsigned short mode;     /* Permissions + SHM_DEST and
++                                           SHM_LOCKED flags */
++               unsigned short __seq;    /* Sequence number */
++};
++
++
++struct shmid_ds {
++               struct ipc_perm shm_perm;    /* Ownership and permissions */
++               size_t          shm_segsz;   /* Size of segment (bytes) */
++               time_t          shm_atime;   /* Last attach time */
++               time_t          shm_dtime;   /* Last detach time */
++               time_t          shm_ctime;   /* Last change time */
++               pid_t           shm_cpid;    /* PID of creator */
++               pid_t           shm_lpid;    /* PID of last shmat(2)/shmdt(2) */
++               shmatt_t        shm_nattch;  /* No. of current attaches */
++};
++
++
+ #define SHMSTAT_TYPE 		struct shmid_ds
+ #define SHMPERM_TYPE 		struct ipc_perm
+ #define SHM_PERM(buf) 		buf.shm_perm
+diff -urN xorg-server-1.20.5/config.sub xorg-server-1.20.5-patched/config.sub
+--- xorg-server-1.20.5/config.sub	2019-05-30 20:27:45.000000000 +0200
++++ xorg-server-1.20.5-patched/config.sub	2019-08-26 15:42:16.797668629 +0200
+@@ -1360,7 +1360,7 @@
+ 	     | powermax* | dnix* | nx6 | nx7 | sei* | dragonfly* \
+ 	     | skyos* | haiku* | rdos* | toppers* | drops* | es* \
+ 	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
+-	     | midnightbsd*)
++	     | midnightbsd* | qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	qnx*)
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Config.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Config.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Config.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Config.c	2019-08-26 19:00:19.196483221 +0200
+@@ -46,6 +46,7 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <sys/stat.h>
+ #include <sys/types.h>
+ #include <grp.h>
+ 
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Configure.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Configure.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Configure.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Configure.c	2019-08-26 18:57:48.462485306 +0200
+@@ -27,6 +27,8 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <errno.h>
++
+ #include "xf86.h"
+ #include "xf86Config.h"
+ #include "xf86_OSlib.h"
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Events.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Events.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Events.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Events.c	2019-08-26 19:02:24.729481485 +0200
+@@ -53,6 +53,8 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <errno.h>
++
+ #include <X11/X.h>
+ #include <X11/Xproto.h>
+ #include <X11/Xatom.h>
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Extensions.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Extensions.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Extensions.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Extensions.c	2019-08-26 19:14:04.760471805 +0200
+@@ -27,6 +27,8 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <strings.h>
++
+ #include "extension.h"
+ #include "extinit.h"
+ #include "globals.h"
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Helper.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Helper.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Helper.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Helper.c	2019-08-26 19:05:29.927478924 +0200
+@@ -38,6 +38,9 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <strings.h>
++#include <sys/stat.h>
++
+ #include <X11/X.h>
+ #include "os.h"
+ #include "servermd.h"
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Init.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Init.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Init.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Init.c	2019-08-26 19:11:01.524474339 +0200
+@@ -37,6 +37,8 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ 
++#include <sys/stat.h>
++
+ #undef HAS_UTSNAME
+ #if !defined(WIN32)
+ #define HAS_UTSNAME 1
+diff -urN xorg-server-1.20.5/hw/xfree86/common/xf86Xinput.c xorg-server-1.20.5-patched/hw/xfree86/common/xf86Xinput.c
+--- xorg-server-1.20.5/hw/xfree86/common/xf86Xinput.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/common/xf86Xinput.c	2019-08-26 19:12:11.188473376 +0200
+@@ -50,6 +50,8 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <strings.h>
++
+ #include <X11/Xfuncproto.h>
+ #include <X11/Xmd.h>
+ #include <X11/extensions/XI.h>
+@@ -832,8 +834,8 @@
+     if (stat(path, &st) == -1)
+         return;
+ 
+-    *maj = major(st.st_rdev);
+-    *min = minor(st.st_rdev);
++    *maj = 0;//major(st.st_rdev);
++    *min = 0;//minor(st.st_rdev);
+ }
+ 
+ static inline InputDriverPtr
+diff -urN xorg-server-1.20.5/hw/xfree86/os-support/shared/posix_tty.c xorg-server-1.20.5-patched/hw/xfree86/os-support/shared/posix_tty.c
+--- xorg-server-1.20.5/hw/xfree86/os-support/shared/posix_tty.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/os-support/shared/posix_tty.c	2019-08-27 14:23:16.401755712 +0200
+@@ -62,6 +62,9 @@
+ #include "xf86Priv.h"
+ #include "xf86_OSlib.h"
+ 
++#include <errno.h>
++#include <termios.h>
++
+ static int
+ GetBaud(int baudrate)
+ {
+diff -urN xorg-server-1.20.5/hw/xfree86/os-support/shared/sigio.c xorg-server-1.20.5-patched/hw/xfree86/os-support/shared/sigio.c
+--- xorg-server-1.20.5/hw/xfree86/os-support/shared/sigio.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/os-support/shared/sigio.c	2019-08-27 14:31:00.997749288 +0200
+@@ -56,6 +56,9 @@
+ #include <xorg-config.h>
+ #endif
+ 
++#include <errno.h>
++#include <sys/stat.h>
++
+ #include <X11/X.h>
+ #include <xserver_poll.h>
+ #include "xf86.h"
+diff -urN xorg-server-1.20.5/hw/xfree86/xkb/xkbPrivate.c xorg-server-1.20.5-patched/hw/xfree86/xkb/xkbPrivate.c
+--- xorg-server-1.20.5/hw/xfree86/xkb/xkbPrivate.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/hw/xfree86/xkb/xkbPrivate.c	2019-08-27 15:33:34.095079278 +0200
+@@ -17,6 +17,8 @@
+ #include "os.h"
+ #include "xf86.h"
+ 
++#include <strings.h>
++
+ int
+ XkbDDXPrivate(DeviceIntPtr dev, KeyCode key, XkbAction *act)
+ {
+diff -urN xorg-server-1.20.5/mi/mibitblt.c xorg-server-1.20.5-patched/mi/mibitblt.c
+--- xorg-server-1.20.5/mi/mibitblt.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/mi/mibitblt.c	2019-08-26 18:12:19.603956538 +0200
+@@ -62,6 +62,8 @@
+ #include <X11/Xmd.h>
+ #include "servermd.h"
+ 
++#include <strings.h>
++
+ /* MICOPYAREA -- public entry for the CopyArea request
+  * For each rectangle in the source region
+  *     get the pixels with GetSpans
+diff -urN xorg-server-1.20.5/mi/miinitext.c xorg-server-1.20.5-patched/mi/miinitext.c
+--- xorg-server-1.20.5/mi/miinitext.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/mi/miinitext.c	2019-08-27 15:30:59.207081420 +0200
+@@ -107,6 +107,8 @@
+ #include "os.h"
+ #include "globals.h"
+ 
++#include <strings.h>
++
+ /* List of built-in (statically linked) extensions */
+ static const ExtensionModule staticExtensions[] = {
+     {GEExtensionInit, "Generic Event Extension", &noGEExtension},
+diff -urN xorg-server-1.20.5/os/access.c xorg-server-1.20.5-patched/os/access.c
+--- xorg-server-1.20.5/os/access.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/os/access.c	2019-08-26 18:34:19.249919058 +0200
+@@ -117,9 +117,9 @@
+ #endif
+ #endif
+ 
+-#if defined(SVR4) ||  (defined(SYSV) && defined(__i386__)) || defined(__GNU__)
++//#if defined(SVR4) ||  (defined(SYSV) && defined(__i386__)) || defined(__GNU__)
+ #include <sys/utsname.h>
+-#endif
++//#endif
+ #if defined(SYSV) &&  defined(__i386__)
+ #include <sys/stream.h>
+ #endif
+@@ -435,7 +435,7 @@
+ #else
+     register int n;
+     int len;
+-    caddr_t addr;
++    void *addr;
+     int family;
+     register HOST *host;
+ 
+diff -urN xorg-server-1.20.5/os/oscolor.c xorg-server-1.20.5-patched/os/oscolor.c
+--- xorg-server-1.20.5/os/oscolor.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/os/oscolor.c	2019-08-26 18:38:45.511915376 +0200
+@@ -52,6 +52,8 @@
+ #include "dix.h"
+ #include "os.h"
+ 
++#include <strings.h>
++
+ typedef struct _builtinColor {
+     unsigned char red;
+     unsigned char green;
+diff -urN xorg-server-1.20.5/os/osinit.c xorg-server-1.20.5-patched/os/osinit.c
+--- xorg-server-1.20.5/os/osinit.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/os/osinit.c	2019-08-26 18:48:19.801907435 +0200
+@@ -135,7 +135,7 @@
+     xorg_backtrace();
+ 
+ #ifdef SA_SIGINFO
+-    if (sip->si_code == SI_USER) {
++/*    if (sip->si_code == SI_USER) {
+         ErrorFSigSafe("Received signal %u sent by process %u, uid %u\n", signo,
+                      sip->si_pid, sip->si_uid);
+     }
+@@ -148,6 +148,7 @@
+             ErrorFSigSafe("%s at address %p\n", strsignal(signo), sip->si_addr);
+         }
+     }
++*/
+ #endif
+ 
+     if (signo != SIGQUIT)
+@@ -254,15 +255,15 @@
+                 dup2(fileno(err), 2);
+                 fclose(err);
+             }
+-#if defined(SYSV) || defined(SVR4) || defined(WIN32) || defined(__CYGWIN__)
++//#if defined(SYSV) || defined(SVR4) || defined(WIN32) || defined(__CYGWIN__)
+             {
+                 static char buf[BUFSIZ];
+ 
+                 setvbuf(stderr, buf, _IOLBF, BUFSIZ);
+             }
+-#else
+-            setlinebuf(stderr);
+-#endif
++//#else
++//            setlinebuf(stderr);
++//#endif
+         }
+ #endif /* !XQUARTZ */
+ 
+diff -urN xorg-server-1.20.5/os/strcasestr.c xorg-server-1.20.5-patched/os/strcasestr.c
+--- xorg-server-1.20.5/os/strcasestr.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/os/strcasestr.c	2019-08-26 18:55:04.992487566 +0200
+@@ -38,6 +38,8 @@
+ #include <string.h>
+ #include "dix.h"
+ 
++#include <strings.h>
++
+ /*
+  * Find the first occurrence of find in s, ignore case.
+  */
+diff -urN xorg-server-1.20.5/os/xserver_poll.c xorg-server-1.20.5-patched/os/xserver_poll.c
+--- xorg-server-1.20.5/os/xserver_poll.c	2019-05-30 20:27:34.000000000 +0200
++++ xorg-server-1.20.5-patched/os/xserver_poll.c	2019-08-26 18:53:21.380488999 +0200
+@@ -84,6 +84,8 @@
+ #include <string.h>                          /* string functions */
+ #include "xserver_poll.h"
+ 
++#include <sys/select.h>
++
+ /*---------------------------------------------------------------------------*\
+ 				  Macros
+ \*---------------------------------------------------------------------------*/
