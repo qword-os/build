@@ -31,4 +31,3 @@ popd
 ninja
 DESTDIR="$TARGET_ROOT" ninja install
 
-exit 0

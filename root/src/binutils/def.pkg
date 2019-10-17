@@ -1,5 +1,5 @@
 PKG_NAME=binutils
-PKG_VERSION=2.32
+PKG_VERSION=2.33.1
 PKG_URL=https://ftp.gnu.org/gnu/binutils/binutils-$PKG_VERSION.tar.xz
 PKG_TARBALL=$PKG_NAME-$PKG_VERSION.tar.xz
 PKG_ARCHIVE_DIR=$PKG_NAME-$PKG_VERSION

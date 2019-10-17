@@ -6,7 +6,7 @@ set -x
 CROSS_ROOT="$(pwd)/cross-root"
 TARGET_ROOT="$(realpath ../..)/root"
 TARGET=x86_64-qword
-BINUTILSVERSION=2.32
+BINUTILSVERSION=2.33.1
 GCCVERSION=9.2.0
 
 if [ -z "$MAKEFLAGS" ]; then
@@ -82,14 +82,3 @@ make all-target-libgcc
 make install-target-libgcc
 make all-target-libstdc++-v3
 make install-target-libstdc++-v3
-
-# Extremely dirty hack to get some packages to build (cough xorg-server)
-mv "$CROSS_ROOT/x86_64-qword/bin/ld" "$CROSS_ROOT/x86_64-qword/bin/wrapped-ld"
-cat >"$CROSS_ROOT/x86_64-qword/bin/ld" <<EOF
-#!/bin/sh
-
-"$CROSS_ROOT/x86_64-qword/bin/wrapped-ld" \$(echo "\$@" | sed 's|\-L/usr/lib||g')
-EOF
-chmod +x "$CROSS_ROOT/x86_64-qword/bin/ld"
-
-exit 0

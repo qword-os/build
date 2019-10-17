@@ -1,6 +1,6 @@
-diff -urN binutils-2.32/bfd/config.bfd binutils-2.32-patched/bfd/config.bfd
---- binutils-2.32/bfd/config.bfd	2019-01-19 17:01:32.000000000 +0100
-+++ binutils-2.32-patched/bfd/config.bfd	2019-05-06 13:13:31.948237673 +0200
+diff -urN binutils-2.33.1/bfd/config.bfd binutils-2.33.1-patched/bfd/config.bfd
+--- binutils-2.33.1/bfd/config.bfd	2019-09-09 15:19:43.000000000 +0200
++++ binutils-2.33.1-patched/bfd/config.bfd	2019-10-17 09:11:35.414218371 +0200
 @@ -718,6 +718,11 @@
      targ_selvecs=i386_elf32_vec
      want64=true
@@ -13,22 +13,22 @@ diff -urN binutils-2.32/bfd/config.bfd binutils-2.32-patched/bfd/config.bfd
  #endif
    i[3-7]86-*-lynxos*)
      targ_defvec=i386_elf32_vec
-diff -urN binutils-2.32/config.sub binutils-2.32-patched/config.sub
---- binutils-2.32/config.sub	2019-01-19 17:01:33.000000000 +0100
-+++ binutils-2.32-patched/config.sub	2019-05-06 13:14:34.692238685 +0200
-@@ -1363,7 +1363,7 @@
+diff -urN binutils-2.33.1/config.sub binutils-2.33.1-patched/config.sub
+--- binutils-2.33.1/config.sub	2019-09-09 15:19:43.000000000 +0200
++++ binutils-2.33.1-patched/config.sub	2019-10-17 09:11:53.299219806 +0200
+@@ -1368,7 +1368,7 @@
  	     | powermax* | dnix* | nx6 | nx7 | sei* | dragonfly* \
  	     | skyos* | haiku* | rdos* | toppers* | drops* | es* \
  	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
--	     | midnightbsd* | amdhsa* | unleashed* | emscripten*)
-+	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | qword*)
+-	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | wasi*)
++	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | wasi* | qword*)
  	# Remember, each alternative MUST END IN *, to match a version number.
  		;;
  	qnx*)
-diff -urN binutils-2.32/gas/configure.tgt binutils-2.32-patched/gas/configure.tgt
---- binutils-2.32/gas/configure.tgt	2019-01-19 17:01:33.000000000 +0100
-+++ binutils-2.32-patched/gas/configure.tgt	2019-05-06 13:17:00.932241043 +0200
-@@ -261,6 +261,8 @@
+diff -urN binutils-2.33.1/gas/configure.tgt binutils-2.33.1-patched/gas/configure.tgt
+--- binutils-2.33.1/gas/configure.tgt	2019-09-09 15:19:43.000000000 +0200
++++ binutils-2.33.1-patched/gas/configure.tgt	2019-10-17 09:11:35.414218371 +0200
+@@ -260,6 +260,8 @@
    i386-*-rdos*)				fmt=elf ;;
    i386-*-darwin*)			fmt=macho ;;
  
@@ -37,10 +37,10 @@ diff -urN binutils-2.32/gas/configure.tgt binutils-2.32-patched/gas/configure.tg
    ia16-*-elf*)				fmt=elf ;;
  
    ia64-*-elf*)				fmt=elf ;;
-diff -urN binutils-2.32/ld/configure.tgt binutils-2.32-patched/ld/configure.tgt
---- binutils-2.32/ld/configure.tgt	2019-01-19 17:01:33.000000000 +0100
-+++ binutils-2.32-patched/ld/configure.tgt	2019-05-06 13:19:30.132243449 +0200
-@@ -264,6 +264,10 @@
+diff -urN binutils-2.33.1/ld/configure.tgt binutils-2.33.1-patched/ld/configure.tgt
+--- binutils-2.33.1/ld/configure.tgt	2019-09-09 15:19:44.000000000 +0200
++++ binutils-2.33.1-patched/ld/configure.tgt	2019-10-17 09:11:35.415218371 +0200
+@@ -265,6 +265,10 @@
  			targ_extra_emuls=elf_x86_64 ;;
  x86_64-*-redox*)	targ_emul=elf_x86_64
  			targ_extra_emuls=elf_i386 ;;
