@@ -2,6 +2,9 @@
 
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
+## Prebuilt image
+Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd
+
 ## Features
 - SMP (multicore) scheduler supporting thread scheduling.
 - Program loading with minimal userspace.
