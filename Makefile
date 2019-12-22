@@ -41,20 +41,18 @@ ifeq ($(OS), Linux)
 	rm -rf qword.hdd
 	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 65 )) of=qword.hdd
 	sudo losetup -P $(LOOP_DEVICE) qword.hdd
-	sudo parted $(LOOP_DEVICE) mklabel msdos
-	sudo dd if=./syslinux/mbr.bin of=$(LOOP_DEVICE) conv=notrunc
-	sudo parted $(LOOP_DEVICE) -a none mkpart primary 40s 131111s
-	sudo parted $(LOOP_DEVICE) -a none mkpart primary 131112s $$(( (($(IMGSIZE) * 1024 * 1024) / 512) + 131111 ))s
-	sudo parted $(LOOP_DEVICE) set 1 boot on
+	sudo parted -s $(LOOP_DEVICE) mklabel msdos
+	sudo parted -s $(LOOP_DEVICE) mkpart primary 1 80
+	sudo parted -s $(LOOP_DEVICE) mkpart primary 81 $$(( $(IMGSIZE) + 80 ))
 	sudo echfs-utils $(LOOP_DEVICE)p2 quick-format 32768
 	cp -v /etc/localtime root/etc/
 	chmod 644 root/etc/localtime
 	sudo ./copy-root-to-img.sh root $(LOOP_DEVICE)p2
 	sudo mkfs.fat $(LOOP_DEVICE)p1
-	sudo syslinux -f -i $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
 	sudo cp -r ./root/boot/* ./mnt/
+	sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` $(LOOP_DEVICE)
 	sync
 	sudo umount $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt

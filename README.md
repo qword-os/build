@@ -5,20 +5,13 @@
 ## Prebuilt image
 Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd
 
-## Features
-- SMP (multicore) scheduler supporting thread scheduling.
-- Program loading with minimal userspace.
-- Fully functional VFS with support for several filesystems.
-- Support for AHCI/SATA.
-- ATA disk support.
-- MBR partitions support.
-
 ## Build requirements
 In order to build qword, make sure to have the following installed:
  `wget`, `git`, `bash`, `make` (`gmake` on FreeBSD), `patch`,
  `meson` (from pip3), `ninja`, `xz`, `gzip`, `tar`,
- `gcc/g++ (8 or higher)`, `nasm`, `autoconf`, `bison`,
- `parted` (on Linux), `mtools`, `syslinux`, and `qemu` (to test it).
+ `gcc/g++` (8 or higher), `nasm`, `autoconf`, `bison`,
+ `parted` (on Linux), `mtools` (on FreeBSD), `syslinux` (on FreeBSD),
+ and `qemu` (to test it).
 
 ## Building
 ```bash
