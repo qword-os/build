@@ -39,11 +39,11 @@ hdd: all
 ifeq ($(OS), Linux)
 	sudo -v
 	rm -rf qword.hdd
-	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 65 )) of=qword.hdd
+	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 80 )) of=qword.hdd
 	sudo losetup -P $(LOOP_DEVICE) qword.hdd
 	sudo parted -s $(LOOP_DEVICE) mklabel msdos
 	sudo parted -s $(LOOP_DEVICE) mkpart primary 1 80
-	sudo parted -s $(LOOP_DEVICE) mkpart primary 81 $$(( $(IMGSIZE) + 80 ))
+	sudo parted -s $(LOOP_DEVICE) mkpart primary 81 100%
 	sudo echfs-utils $(LOOP_DEVICE)p2 quick-format 32768
 	cp -v /etc/localtime root/etc/
 	chmod 644 root/etc/localtime
