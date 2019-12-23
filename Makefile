@@ -18,16 +18,16 @@ PATH := $(shell pwd)/host/toolchain/cross-root/bin:$(PATH)
 QWORD_DIR  := $(shell pwd)/qword
 QWORD_REPO := https://github.com/qword-os/qword.git
 
-.PHONY: all clean hdd run run-nokvm
+.PHONY: all prepare clean hdd run run-nokvm
 
-all: $(QWORD_DIR)
+all: prepare
 	$(MAKE) -C $(QWORD_DIR) install CC=x86_64-qword-gcc PREFIX=$(PREFIX)
 
-clean: $(QWORD_DIR)
-	$(MAKE) -C $(QWORD_DIR) clean
+clean:
+	$(MAKE) -C $(QWORD_DIR) clean || true
 
-$(QWORD_DIR):
-	git clone $(QWORD_REPO) $(QWORD_DIR)
+prepare:
+	git clone $(QWORD_REPO) $(QWORD_DIR) || ( cd $(QWORD_DIR) && git pull )
 
 ifeq ($(OS), Linux)
 LOOP_DEVICE := $(shell losetup --find)
