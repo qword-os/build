@@ -5,6 +5,8 @@
 ## Prebuilt image
 Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd
 
+Note: The default user/password is 'root/root'.
+
 ## Build requirements
 In order to build qword, make sure to have the following installed:
  `wget`, `git`, `bash`, `make` (`gmake` on FreeBSD), `patch`,
