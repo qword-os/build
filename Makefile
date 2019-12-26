@@ -38,18 +38,23 @@ endif
 hdd: all
 ifeq ($(OS), Linux)
 	sudo -v
-	rm -rf qword.hdd
+ifeq (,$(wildcard ./qword.hdd))
 	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 80 )) of=qword.hdd
 	sudo losetup -P $(LOOP_DEVICE) qword.hdd
 	sudo parted -s $(LOOP_DEVICE) mklabel msdos
 	sudo parted -s $(LOOP_DEVICE) mkpart primary 1 80
 	sudo parted -s $(LOOP_DEVICE) mkpart primary 81 100%
 	sudo echfs-utils $(LOOP_DEVICE)p2 quick-format 32768
+else
+	sudo losetup -P $(LOOP_DEVICE) qword.hdd
+endif
 	cp -v /etc/localtime root/etc/
 	chmod 644 root/etc/localtime
-	sudo ./copy-root-to-img.sh root $(LOOP_DEVICE)p2
-	sudo mkfs.fat $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt && sudo mkdir mnt
+	sudo echfs-fuse $(LOOP_DEVICE)p2 mnt
+	sudo rsync -ru --info=progress2 --copy-links root/* mnt/
+	sudo fusermount -u mnt/
+	sudo mkfs.fat $(LOOP_DEVICE)p1
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
 	sudo cp -r ./root/boot/* ./mnt/
 	sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` $(LOOP_DEVICE)
