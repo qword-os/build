@@ -53,6 +53,7 @@ endif
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo echfs-fuse $(LOOP_DEVICE)p2 mnt
 	sudo rsync -ru --info=progress2 --copy-links root/* mnt/
+	sudo sync
 	sudo fusermount -u mnt/
 	sudo mkfs.fat $(LOOP_DEVICE)p1
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
