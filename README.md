@@ -3,7 +3,7 @@
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
 ## Prebuilt image
-Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd
+Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.xz
 
 Note: The default user/password is 'root/root'.
 
