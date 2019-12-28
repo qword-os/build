@@ -26,8 +26,15 @@ all: prepare
 clean:
 	$(MAKE) -C $(QWORD_DIR) clean || true
 
-prepare:
-	git clone $(QWORD_REPO) $(QWORD_DIR) || ( cd $(QWORD_DIR) && git pull )
+prepare: $(QWORD_DIR)
+ifeq ($(PULLREPOS), true)
+	cd $(QWORD_DIR) && git pull
+else
+	true # -- NOT PULLING QWORD REPO -- #
+endif
+
+$(QWORD_DIR):
+	git clone $(QWORD_REPO) $(QWORD_DIR)
 
 ifeq ($(OS), Linux)
 LOOP_DEVICE := $(shell losetup --find)
@@ -52,14 +59,14 @@ endif
 	chmod 644 root/etc/localtime
 	sudo rm -rf ./mnt && sudo mkdir mnt
 	sudo echfs-fuse $(LOOP_DEVICE)p2 mnt
-	sudo rsync -ru --info=progress2 --copy-links root/* mnt/
+	sudo rsync -ru --copy-links --info=progress2 root/* mnt/
 	sudo sync
 	sudo fusermount -u mnt/
 	sudo mkfs.fat $(LOOP_DEVICE)p1
 	sudo mount $(LOOP_DEVICE)p1 ./mnt
 	sudo cp -r ./root/boot/* ./mnt/
 	sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` $(LOOP_DEVICE)
-	sync
+	sudo sync
 	sudo umount $(LOOP_DEVICE)p1
 	sudo rm -rf ./mnt
 	sudo losetup -d $(LOOP_DEVICE)
