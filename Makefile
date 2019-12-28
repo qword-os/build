@@ -54,6 +54,7 @@ ifeq (,$(wildcard ./qword.hdd))
 	sudo echfs-utils `cat .loopdev`p2 quick-format 32768
 
 	sudo mkdir -p mnt
+
 	sudo mkfs.fat `cat .loopdev`p1
 	sudo mount `cat .loopdev`p1 ./mnt
 
@@ -70,14 +71,17 @@ endif
 	chmod 644 root/etc/localtime
 
 	mkdir -p mnt
+
 	echfs-fuse --mbr -p1 qword.hdd mnt
 	rsync -ru --copy-links --info=progress2 root/* mnt/
 	sync
 	fusermount -u mnt/
-	guestmount -a qword.hdd -m /dev/sda1 mnt/
+
+	guestmount --pid-file .guestfspid -a qword.hdd -m /dev/sda1 mnt/
 	rsync -ru --copy-links --info=progress2 root/boot/* mnt/
 	sync
-	umount mnt/
+	( guestunmount mnt/ & tail --pid=`cat .guestfspid` -f /dev/null )
+	rm .guestfspid
 
 	rm -rf ./mnt
 else ifeq ($(OS), FreeBSD)
@@ -123,7 +127,7 @@ QEMU_FLAGS := $(QEMU_FLAGS)                          \
 	-smp sockets=1,cores=4,threads=1
 
 run:
-	qemu-system-x86_64 $(QEMU_FLAGS) -enable-kvm
+	qemu-system-x86_64 $(QEMU_FLAGS) -enable-kvm -cpu host
 
 run-nokvm:
 	qemu-system-x86_64 $(QEMU_FLAGS)
