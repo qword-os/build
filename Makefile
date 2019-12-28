@@ -18,7 +18,7 @@ PATH := $(shell pwd)/host/toolchain/cross-root/bin:$(PATH)
 QWORD_DIR  := $(shell pwd)/qword
 QWORD_REPO := https://github.com/qword-os/qword.git
 
-.PHONY: all prepare clean hdd run run-nokvm
+.PHONY: all prepare clean hdd hdd-fast-sync run run-nokvm
 
 all: prepare
 	$(MAKE) -C $(QWORD_DIR) install CC=x86_64-qword-gcc PREFIX=$(PREFIX)
@@ -40,6 +40,17 @@ ifeq ($(OS), Linux)
 LOOP_DEVICE := $(shell losetup --find)
 else ifeq ($(OS), FreeBSD)
 LOOP_DEVICE := md9
+endif
+
+hdd-fast-sync: all
+ifeq ($(OS), Linux)
+	mkdir -p mnt
+	echfs-fuse --mbr -p1 qword.hdd mnt
+	rsync -ru --copy-links --info=progress2 root/* mnt/
+	sync
+	fusermount -u mnt/
+else
+	false
 endif
 
 hdd: all

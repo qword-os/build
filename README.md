@@ -50,4 +50,7 @@ make clean && make DBGSYM=yes hdd    # For compilation with debug symbols and ot
 make run
 # If that doesn't work because you don't have hardware virtualisation/KVM, run
 make run-nokvm
+# After the first time `make hdd` is ran, one can also use the much faster `make hdd-fast-sync` which also
+# does not require root.
+make hdd-fast-sync
 ```
