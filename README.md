@@ -12,10 +12,17 @@ In order to build qword, make sure to have the following installed:
  `wget`, `git`, `bash`, `make` (`gmake` on FreeBSD), `patch`,
  `meson` (from pip3), `ninja`, `xz`, `gzip`, `tar`,
  `gcc/g++` (8 or higher), `nasm`, `autoconf`, `bison`,
- `fuse-devel`, `rsync`,
+ `fuse-devel` (on Linux), `rsync` (on Linux),
+ `libguestfs` (on Linux),
  `parted` (on Linux), `grub2` (on Linux),
  `mtools` (on FreeBSD), `syslinux` (on FreeBSD),
  and `qemu` (to test it).
+
+After installing `libguestfs` it might be necessary to run the following:
+```bash
+sudo install -d /usr/lib/guestfs
+sudo update-libguestfs-appliance
+```
 
 ## Building
 ```bash
@@ -50,7 +57,4 @@ make clean && make DBGSYM=yes hdd    # For compilation with debug symbols and ot
 make run
 # If that doesn't work because you don't have hardware virtualisation/KVM, run
 make run-nokvm
-# After the first time `make hdd` is ran, one can also use the much faster `make hdd-fast-sync` which also
-# does not require root.
-make hdd-fast-sync
 ```

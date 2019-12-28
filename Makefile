@@ -18,7 +18,7 @@ PATH := $(shell pwd)/host/toolchain/cross-root/bin:$(PATH)
 QWORD_DIR  := $(shell pwd)/qword
 QWORD_REPO := https://github.com/qword-os/qword.git
 
-.PHONY: all prepare clean hdd hdd-fast-sync run run-nokvm
+.PHONY: all prepare clean hdd run run-nokvm
 
 all: prepare
 	$(MAKE) -C $(QWORD_DIR) install CC=x86_64-qword-gcc PREFIX=$(PREFIX)
@@ -36,51 +36,50 @@ endif
 $(QWORD_DIR):
 	git clone $(QWORD_REPO) $(QWORD_DIR)
 
-ifeq ($(OS), Linux)
-LOOP_DEVICE := $(shell losetup --find)
-else ifeq ($(OS), FreeBSD)
+ifeq ($(OS), FreeBSD)
 LOOP_DEVICE := md9
 endif
 
-hdd-fast-sync: all
+hdd: all
 ifeq ($(OS), Linux)
+ifeq (,$(wildcard ./qword.hdd))
+	sudo -v
+	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 80 )) of=qword.hdd
+	sudo losetup -Pf --show qword.hdd > .loopdev
+
+	sudo parted -s `cat .loopdev` mklabel msdos
+	sudo parted -s `cat .loopdev` mkpart primary 1 80
+	sudo parted -s `cat .loopdev` mkpart primary 81 100%
+
+	sudo echfs-utils `cat .loopdev`p2 quick-format 32768
+
+	sudo mkdir -p mnt
+	sudo mkfs.fat `cat .loopdev`p1
+	sudo mount `cat .loopdev`p1 ./mnt
+
+	sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` `cat .loopdev`
+	sudo sync
+	sudo umount `cat .loopdev`p1
+
+	sudo rm -rf mnt
+
+	sudo losetup -d `cat .loopdev`
+	rm .loopdev
+endif
+	cp -v /etc/localtime root/etc/
+	chmod 644 root/etc/localtime
+
 	mkdir -p mnt
 	echfs-fuse --mbr -p1 qword.hdd mnt
 	rsync -ru --copy-links --info=progress2 root/* mnt/
 	sync
 	fusermount -u mnt/
-else
-	false
-endif
+	guestmount -a qword.hdd -m /dev/sda1 mnt/
+	rsync -ru --copy-links --info=progress2 root/boot/* mnt/
+	sync
+	umount mnt/
 
-hdd: all
-ifeq ($(OS), Linux)
-	sudo -v
-ifeq (,$(wildcard ./qword.hdd))
-	dd if=/dev/zero bs=1M count=0 seek=$$(( $(IMGSIZE) + 80 )) of=qword.hdd
-	sudo losetup -P $(LOOP_DEVICE) qword.hdd
-	sudo parted -s $(LOOP_DEVICE) mklabel msdos
-	sudo parted -s $(LOOP_DEVICE) mkpart primary 1 80
-	sudo parted -s $(LOOP_DEVICE) mkpart primary 81 100%
-	sudo echfs-utils $(LOOP_DEVICE)p2 quick-format 32768
-else
-	sudo losetup -P $(LOOP_DEVICE) qword.hdd
-endif
-	cp -v /etc/localtime root/etc/
-	chmod 644 root/etc/localtime
-	sudo rm -rf ./mnt && sudo mkdir mnt
-	sudo echfs-fuse $(LOOP_DEVICE)p2 mnt
-	sudo rsync -ru --copy-links --info=progress2 root/* mnt/
-	sudo sync
-	sudo fusermount -u mnt/
-	sudo mkfs.fat $(LOOP_DEVICE)p1
-	sudo mount $(LOOP_DEVICE)p1 ./mnt
-	sudo cp -r ./root/boot/* ./mnt/
-	sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` $(LOOP_DEVICE)
-	sudo sync
-	sudo umount $(LOOP_DEVICE)p1
-	sudo rm -rf ./mnt
-	sudo losetup -d $(LOOP_DEVICE)
+	rm -rf ./mnt
 else ifeq ($(OS), FreeBSD)
 	sudo -v
 	rm -rf qword.part
