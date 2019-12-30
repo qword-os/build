@@ -121,9 +121,7 @@ QEMU_FLAGS := $(QEMU_FLAGS)                          \
 	-net none                                        \
 	-debugcon stdio                                  \
 	-d cpu_reset                                     \
-	-device ahci,id=ahci                             \
-	-drive if=none,id=disk,file=qword.hdd,format=raw \
-	-device ide-drive,drive=disk,bus=ahci.0          \
+	-hda qword.hdd                                   \
 	-smp sockets=1,cores=4,threads=1
 
 run:
