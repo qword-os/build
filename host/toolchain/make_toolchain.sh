@@ -82,3 +82,8 @@ make all-target-libgcc
 make install-target-libgcc
 make all-target-libstdc++-v3
 make install-target-libstdc++-v3
+
+# Install libtool
+
+./pkg install libtool
+./pkg clean libtool

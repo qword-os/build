@@ -1,0 +1,44 @@
+diff -urN libtool-2.4.6/build-aux/ltmain.in libtool-2.4.6-patched/build-aux/ltmain.in
+--- libtool-2.4.6/build-aux/ltmain.in	2015-02-06 13:57:56.000000000 +0100
++++ libtool-2.4.6-patched/build-aux/ltmain.in	2020-01-03 11:39:30.310714724 +0100
+@@ -6449,7 +6449,7 @@
+ 	      fi
+ 	    else
+ 	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir=-L$libdir
++	      add_dir=-L$lt_sysroot$libdir
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in
+diff -urN libtool-2.4.6/m4/libtool.m4 libtool-2.4.6-patched/m4/libtool.m4
+--- libtool-2.4.6/m4/libtool.m4	2015-01-20 17:15:19.000000000 +0100
++++ libtool-2.4.6-patched/m4/libtool.m4	2020-01-03 11:43:01.172730045 +0100
+@@ -2905,6 +2905,17 @@
+   hardcode_into_libs=yes
+   ;;
+ 
++qword*)
++  version_type=linux # correct to gnu/linux during the next big refactor
++  need_lib_prefix=no
++  need_version=no
++  library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
++  soname_spec='$libname$release$shared_ext$major'
++  shlibpath_var=LD_LIBRARY_PATH
++  shlibpath_overrides_runpath=no
++  hardcode_into_libs=yes
++  ;;
++
+ newsos6)
+   version_type=linux # correct to gnu/linux during the next big refactor
+   library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
+@@ -3554,6 +3565,10 @@
+   fi
+   ;;
+ 
++qword*)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
++
+ newos6*)
+   lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (executable|dynamic lib)'
+   lt_cv_file_magic_cmd=/usr/bin/file

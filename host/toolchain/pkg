@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -e
+
+export PKG_PREFIX=$(realpath .)/cross-root
+
+export PATH=$PKG_PREFIX/bin:$PATH
+
+install_package() {
+    for t in $PKG_TOOLS; do
+        export PATH=$PKG_PREFIX/$t/bin:$PATH
+    done
+
+    cd pkgs/$1
+
+    ( pkg_fetch )
+    ( pkg_build )
+    ( pkg_install )
+
+    touch installed
+}
+
+install_packages() {
+    for i in "$@"; do
+        if [ -f pkgs/$i/installed ]; then
+            echo "Package $i already installed."
+            continue
+        fi
+
+        . pkgs/$i/def.pkg
+
+        echo "Installing $PKG_NAME ($PKG_VERSION)..."
+        echo "Deps:      $PKG_DEPS"
+        echo "Tools:     $PKG_TOOLS"
+
+        ( install_packages $PKG_TOOLS $PKG_DEPS )
+
+        ( install_package $i )
+    done
+}
+
+clean_packages() {
+    for i in "$@"; do
+        . pkgs/$i/def.pkg
+
+        echo "Cleaning $PKG_NAME ($PKG_VERSION)..."
+
+        cd pkgs/$i
+
+        ( pkg_clean )
+    done
+}
+
+case $1 in
+    install)
+        install_packages "${@:2}";;
+    clean)
+        clean_packages "${@:2}";;
+    *)
+        printf "\e[33m'$1' is an invalid command!\e[0m\n" 1>&2
+        exit 1
+        ;;
+esac

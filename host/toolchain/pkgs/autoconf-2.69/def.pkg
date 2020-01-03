@@ -1,0 +1,27 @@
+PKG_VERSION=2.69
+PKG_NAME=autoconf-$PKG_VERSION
+PKG_URL=https://ftp.gnu.org/gnu/autoconf/autoconf-$PKG_VERSION.tar.gz
+PKG_TARBALL=autoconf-$PKG_VERSION.tar.gz
+PKG_ARCHIVE_DIR=autoconf-$PKG_VERSION
+PKG_DEPS=""
+PKG_TOOLS=""
+
+pkg_fetch() {
+    [ -f $PKG_TARBALL ] || wget $PKG_URL
+    [ -d $PKG_ARCHIVE_DIR ] || tar -xf $PKG_TARBALL
+}
+
+pkg_build() {
+    cd $PKG_ARCHIVE_DIR
+    ./configure --prefix=$PKG_PREFIX/$PKG_NAME
+    make
+}
+
+pkg_install() {
+    cd $PKG_ARCHIVE_DIR
+    make install
+}
+
+pkg_clean() {
+    rm -rf $PKG_ARCHIVE_DIR
+}
