@@ -84,7 +84,5 @@ make all-target-libstdc++-v3
 make install-target-libstdc++-v3
 cd ../..
 
-# Install libtool
-
-./pkg install libtool
-./pkg clean libtool
+# Install other host tools
+./maketools.sh install

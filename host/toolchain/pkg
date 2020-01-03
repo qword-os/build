@@ -45,9 +45,7 @@ clean_packages() {
 
         echo "Cleaning $PKG_NAME ($PKG_VERSION)..."
 
-        cd pkgs/$i
-
-        ( pkg_clean )
+        ( cd pkgs/$i && pkg_clean )
     done
 }
 
