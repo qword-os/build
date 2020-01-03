@@ -11,6 +11,7 @@ pkg_fetch() {
     [ -d $PKG_ARCHIVE_DIR ] || tar -xf $PKG_TARBALL
 
     cd $PKG_ARCHIVE_DIR
+    patch -p1 < ../automake-1.11.patch
     ./bootstrap
 }
 

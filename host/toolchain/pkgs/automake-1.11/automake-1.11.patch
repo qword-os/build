@@ -1,0 +1,25 @@
+diff -urN automake-1.11.6/automake.in automake-1.11.6-patched/automake.in
+--- automake-1.11.6/automake.in	2012-07-09 17:39:57.000000000 +0200
++++ automake-1.11.6-patched/automake.in	2020-01-03 18:17:12.008147978 +0100
+@@ -4156,7 +4156,7 @@
+ sub substitute_ac_subst_variables ($)
+ {
+   my ($text) = @_;
+-  $text =~ s/\${([^ \t=:+{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
++  $text =~ s/\$\{([^ \t=:+{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
+   return $text;
+ }
+ 
+diff -urN automake-1.11.6/lib/config.sub automake-1.11.6-patched/lib/config.sub
+--- automake-1.11.6/lib/config.sub	2012-07-09 17:39:57.000000000 +0200
++++ automake-1.11.6-patched/lib/config.sub	2020-01-03 18:18:20.142152928 +0100
+@@ -1362,7 +1362,8 @@
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
++	      | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)

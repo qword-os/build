@@ -3,7 +3,7 @@ PKG_VERSION=2.4.6
 PKG_URL=https://git.savannah.gnu.org/r/libtool.git
 PKG_ARCHIVE_DIR=libtool
 PKG_DEPS=""
-PKG_TOOLS="autoconf-2.69"
+PKG_TOOLS="autoconf-2.69 automake-1.15"
 
 pkg_fetch() {
     [ -d $PKG_ARCHIVE_DIR ] || git clone --branch v$PKG_VERSION $PKG_URL
