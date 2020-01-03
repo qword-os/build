@@ -6,7 +6,7 @@ PKG_DEPS=""
 PKG_TOOLS="autoconf-2.69 automake-1.15"
 
 pkg_fetch() {
-    [ -d $PKG_ARCHIVE_DIR ] || git clone --branch v$PKG_VERSION $PKG_URL
+    [ -d $PKG_ARCHIVE_DIR ] || git clone --branch v$PKG_VERSION --depth=1 $PKG_URL
 
     cd $PKG_ARCHIVE_DIR
     patch -p1 < ../libtool.patch
