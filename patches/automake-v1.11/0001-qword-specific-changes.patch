@@ -1,0 +1,40 @@
+From c7c8eab733ee13312e438e50f0448406eef0484e Mon Sep 17 00:00:00 2001
+From: mintsuki <mintsuki@protonmail.com>
+Date: Sat, 4 Jan 2020 15:17:31 +0100
+Subject: [PATCH] qword-specific-changes
+
+---
+ automake.in    | 2 +-
+ lib/config.sub | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/automake.in b/automake.in
+index 921a6ae..1969965 100644
+--- a/automake.in
++++ b/automake.in
+@@ -4156,7 +4156,7 @@ sub substitute_ac_subst_variables_worker($)
+ sub substitute_ac_subst_variables ($)
+ {
+   my ($text) = @_;
+-  $text =~ s/\${([^ \t=:+{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
++  $text =~ s/\$\{([^ \t=:+{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
+   return $text;
+ }
+ 
+diff --git a/lib/config.sub b/lib/config.sub
+index c894da4..8c0fe1d 100755
+--- a/lib/config.sub
++++ b/lib/config.sub
+@@ -1362,7 +1362,8 @@ case $os in
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
++	      | -qword*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+-- 
+2.24.1
+

@@ -1,0 +1,59 @@
+From 4cb79fbaf55aa105a0e216e655df8009d7e3d05e Mon Sep 17 00:00:00 2001
+From: mintsuki <mintsuki@protonmail.com>
+Date: Sat, 4 Jan 2020 15:21:28 +0100
+Subject: [PATCH] qword-specific-changes
+
+---
+ build-aux/ltmain.in |  2 +-
+ m4/libtool.m4       | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 46a0bb5..f04a268 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6442,7 +6442,7 @@ func_mode_link ()
+ 	      fi
+ 	    else
+ 	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir=-L$libdir
++	      add_dir=-L$lt_sysroot$libdir
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index f796d7b..85c53dc 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -2904,6 +2904,17 @@ netbsd*)
+   hardcode_into_libs=yes
+   ;;
+ 
++qword*)
++  version_type=linux # correct to gnu/linux during the next big refactor
++  need_lib_prefix=no
++  need_version=no
++  library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
++  soname_spec='$libname$release$shared_ext$major'
++  shlibpath_var=LD_LIBRARY_PATH
++  shlibpath_overrides_runpath=no
++  hardcode_into_libs=yes
++  ;;
++
+ newsos6)
+   version_type=linux # correct to gnu/linux during the next big refactor
+   library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
+@@ -3549,6 +3560,10 @@ netbsd*)
+   fi
+   ;;
+ 
++qword*)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
++
+ newos6*)
+   lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (executable|dynamic lib)'
+   lt_cv_file_magic_cmd=/usr/bin/file
+-- 
+2.24.1
+

@@ -10,9 +10,9 @@ Note 1: This is a hard drive image compressed with xz. Unpack it with
 xzcat < qword.hdd.xz > qword.hdd
 ```
 
-Note 2: This image can be ran on QEMU using the following recommended command
+Note 2: This image can be ran on QEMU using the provided `run.sh` script
 ```bash
-qemu-system-x86_64 -enable-kvm -cpu host -smp 4 -m 2G -hda qword.hdd
+./run.sh qword.hdd
 ```
 This image should also work on other VM software assuming it is inserted into a ATA controller.
 The image can also be booted off a SATA or NVMe device, but that requires editing
@@ -28,7 +28,8 @@ Note 3: The default user/password is 'root/root'.
 In order to build qword, make sure to have the following installed:
  `wget`, `git`, `bash`, `make` (`gmake` on FreeBSD), `patch`,
  `meson` (from pip3), `ninja`, `xz`, `gzip`, `tar`,
- `gcc/g++` (8 or higher), `nasm`, `autoconf`, `bison`, `help2man`,
+ `gcc/g++` (8 or higher), `nasm`, `autoconf`, `bison`,
+ `gperf`, `autopoint`, `help2man`,
  `fuse-devel` (on Linux), `rsync` (on Linux),
  `libguestfs` (on Linux),
  `parted` (on Linux), `grub2` (on Linux),
@@ -41,37 +42,44 @@ sudo install -d /usr/lib/guestfs
 sudo update-libguestfs-appliance
 ```
 
-## Building
+The echfs utilities are necessary to build the image. Install them:
 ```bash
-# Clone repo wherever you like
-git clone https://github.com/qword-os/build.git qword-build
-cd qword-build/host
-# Let's first build and install the echfs-utils
 git clone https://github.com/qword-os/echfs.git
 cd echfs
 make
 # This will install echfs-utils in /usr/local
 sudo make install
-# Else specify a PREFIX variable if you want to install it elsewhere
-#make PREFIX=<myprefix> install
-# Now build the toolchain (this step will take a while)
-cd ../toolchain
-# You can replace the 4 in -j4 with your number of cores + 1
-./make_toolchain.sh -j4
-# Go back to the root of the tree
-cd ../..
-# Build the ports distribution
-cd root/src
-MAKEFLAGS=-j4 ./makeworld.sh
-# Now to build qword itself
-cd ../..
-make clean && make hdd               # For a standard release build
-make clean && make DBGOUT=qemu hdd   # For QEMU console debug output
-make clean && make DBGOUT=tty hdd    # For kernel tty debug output
-make clean && make DBGOUT=both hdd   # For both of the above
-make clean && make DBGSYM=yes hdd    # For compilation with debug symbols and other debug facilities (can be used in combination with the other options)
+```
+
+And finally, make sure you have `xbstrap`. You can install it from `pip3`:
+```bash
+sudo pip3 install xbstrap
+```
+
+## Building
+```bash
+# Clone this repo wherever you like
+git clone https://github.com/qword-os/build.git qword-bootstrap
+# Create and enter a build directory
+mkdir build && cd build
+# Initialise xbstrap and start a full build
+xbstrap init ../qword-bootstrap
+xbstrap install --all
+# Enter the qword-bootstrap directory
+cd ../qword-bootstrap
+# Create the image using the bootstrap.sh script
+./bootstrap.sh ../build
 # And now if you wanna test it in qemu simply run
-make run
+./run.sh
 # If that doesn't work because you don't have hardware virtualisation/KVM, run
-make run-nokvm
+NO_KVM=1 ./run.sh
+```
+
+Some MAKEFLAGS that can be useful are:
+```bash
+MAKEFLAGS="-j8" ./bootstrap.sh ../build  # For parallelism
+MAKEFLAGS="DBGOUT=qemu -j8" ./bootstrap.sh ../build  # For QEMU console debug output
+DBGOUT=tty    # For kernel tty debug output
+DBGOUT=both   # For both of the above
+DBGSYM=yes    # For compilation with debug symbols and other debug facilities (can be used in combination with the other options)
 ```

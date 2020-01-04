@@ -1,0 +1,31 @@
+From b9621512484b85dd3cbb5ab352d327169dc12e32 Mon Sep 17 00:00:00 2001
+From: mintsuki <mintsuki@protonmail.com>
+Date: Sat, 4 Jan 2020 15:25:40 +0100
+Subject: [PATCH] qword-specific-changes
+
+---
+ src/tail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/tail.c b/src/tail.c
+index ac001d7..a63c42f 100644
+--- a/src/tail.c
++++ b/src/tail.c
+@@ -57,7 +57,13 @@
+ 
+ /* inotify needs to know if a file is local.  */
+ # include "fs.h"
+-# include "fs-is-local.h"
++# ifdef __qword__
++int is_local_fs_type (unsigned long int magic) {
++    return 0;
++}
++#else
++#  include "fs-is-local.h"
++# endif
+ # if HAVE_SYS_STATFS_H
+ #  include <sys/statfs.h>
+ # elif HAVE_SYS_VFS_H
+-- 
+2.24.1
+
