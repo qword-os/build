@@ -495,3 +495,15 @@ packages:
         environ:
           DESTDIR: '@THIS_COLLECT_DIR@'
         quiet: true
+
+  - name: util-qword
+    source:
+      subdir: 'ports'
+      git: 'https://github.com/qword-os/util-qword.git'
+      branch: 'master'
+    tools_required:
+      - system-gcc
+    configure: []
+    build:
+      - args: ['make', '-C', '@THIS_SOURCE_DIR@', 'CC=x86_64-qword-gcc']
+      - args: ['make', '-C', '@THIS_SOURCE_DIR@', 'DESTDIR=@THIS_COLLECT_DIR@', 'PREFIX=/usr', 'install']
