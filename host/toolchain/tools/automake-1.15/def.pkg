@@ -3,7 +3,6 @@ PKG_VERSION=1.15.1
 PKG_URL=https://ftp.gnu.org/gnu/automake/automake-$PKG_VERSION.tar.gz
 PKG_TARBALL=automake-$PKG_VERSION.tar.gz
 PKG_ARCHIVE_DIR=automake-$PKG_VERSION
-PKG_DEPS=""
 PKG_TOOLS="autoconf-2.69"
 
 pkg_fetch() {
@@ -17,14 +16,14 @@ pkg_fetch() {
 
 pkg_build() {
     cd $PKG_ARCHIVE_DIR
-    ./configure --prefix=$PKG_PREFIX/$PKG_NAME MAKEINFO=/bin/true
+    ./configure --prefix=$PKG_PREFIX MAKEINFO=/bin/true
     make
 }
 
 pkg_install() {
     cd $PKG_ARCHIVE_DIR
     make install
-    ln -sf $PKG_PREFIX/$PKG_NAME/share/aclocal-1.15 $PKG_PREFIX/$PKG_NAME/share/aclocal
+    ln -sf $PKG_PREFIX/share/aclocal-1.15 $PKG_PREFIX/share/aclocal
 }
 
 pkg_clean() {

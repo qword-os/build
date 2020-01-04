@@ -2,16 +2,17 @@
 
 set -e
 
-export PKG_PREFIX=$(realpath .)/cross-root
-
-export PATH=$PKG_PREFIX/bin:$PATH
+CROSS_ROOT=$(realpath .)/cross-root
+export PATH=$CROSS_ROOT/bin:$PATH
 
 install_package() {
     for t in $PKG_TOOLS; do
-        export PATH=$PKG_PREFIX/$t/bin:$PATH
+        export PATH=$CROSS_ROOT/tools/$t/bin:$PATH
     done
 
-    cd pkgs/$1
+    PKG_PREFIX=$CROSS_ROOT/tools/$1
+
+    cd tools/$1
 
     ( pkg_fetch )
     ( pkg_build )
@@ -22,18 +23,17 @@ install_package() {
 
 install_packages() {
     for i in "$@"; do
-        if [ -f pkgs/$i/installed ]; then
+        if [ -f tools/$i/installed ]; then
             echo "Package $i already installed."
             continue
         fi
 
-        . pkgs/$i/def.pkg
+        . tools/$i/def.pkg
 
         echo "Installing $PKG_NAME ($PKG_VERSION)..."
-        echo "Deps:      $PKG_DEPS"
         echo "Tools:     $PKG_TOOLS"
 
-        ( install_packages $PKG_TOOLS $PKG_DEPS )
+        ( install_packages $PKG_TOOLS )
 
         ( install_package $i )
     done
@@ -41,11 +41,11 @@ install_packages() {
 
 clean_packages() {
     for i in "$@"; do
-        . pkgs/$i/def.pkg
+        . tools/$i/def.pkg
 
         echo "Cleaning $PKG_NAME ($PKG_VERSION)..."
 
-        ( cd pkgs/$i && pkg_clean )
+        ( cd tools/$i && pkg_clean )
     done
 }
 

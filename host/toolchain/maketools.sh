@@ -2,7 +2,7 @@
 
 set -e
 
-cd pkgs
+cd tools
 TOOLS=$(echo */def.pkg | sed 's/\/def.pkg//g')
 cd ..
 
@@ -12,5 +12,5 @@ fi
 ./pkg clean $TOOLS
 
 for i in $TOOLS; do
-    ( cd pkgs/$i && rm -f installed )
+    ( cd tools/$i && rm -f installed )
 done

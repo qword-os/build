@@ -3,7 +3,6 @@ PKG_NAME=autoconf-$PKG_VERSION
 PKG_URL=https://ftp.gnu.org/gnu/autoconf/autoconf-$PKG_VERSION.tar.gz
 PKG_TARBALL=autoconf-$PKG_VERSION.tar.gz
 PKG_ARCHIVE_DIR=autoconf-$PKG_VERSION
-PKG_DEPS=""
 PKG_TOOLS=""
 
 pkg_fetch() {
@@ -13,7 +12,7 @@ pkg_fetch() {
 
 pkg_build() {
     cd $PKG_ARCHIVE_DIR
-    ./configure --prefix=$PKG_PREFIX/$PKG_NAME
+    ./configure --prefix=$PKG_PREFIX
     make
 }
 

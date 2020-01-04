@@ -2,14 +2,13 @@ PKG_NAME=pkg-config
 PKG_VERSION=0.29.2
 PKG_URL=https://gitlab.freedesktop.org/pkg-config/pkg-config.git
 PKG_ARCHIVE_DIR=pkg-config
-PKG_DEPS=""
 PKG_TOOLS="autoconf-2.69 automake-1.11"
 
 pkg_fetch() {
     [ -d $PKG_ARCHIVE_DIR ] || git clone --branch $PKG_NAME-$PKG_VERSION --depth=1 $PKG_URL
 
     cd $PKG_ARCHIVE_DIR
-    export ACLOCAL_PATH=$PKG_PREFIX/share/aclocal
+    export ACLOCAL_PATH=$CROSS_ROOT/share/aclocal
     NOCONFIGURE=yes ./autogen.sh
 }
 
