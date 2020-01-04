@@ -75,14 +75,16 @@ if [ "$OS" = "Linux" ]; then
     mkdir -p mnt
 
     echfs-fuse --mbr -p1 qword.hdd mnt
-    rsync -ru --copy-links --info=progress2 "$BUILD_DIR/system-root" mnt/
+    while ! rsync -ru --copy-links --info=progress2 "$BUILD_DIR"/system-root/* mnt; do
+        true
+    done # FIXME: This while loop only exists because of an issue in echfs-fuse that makes it fail randomly.
     sync
-    rsync -ru --copy-links --info=progress2 root mnt/
+    rsync -ru --copy-links --info=progress2 root/* mnt
     sync
     fusermount -u mnt/
 
     guestmount --pid-file .guestfspid -a qword.hdd -m /dev/sda1 mnt/
-    rsync -ru --copy-links --info=progress2 boot mnt/
+    rsync -ru --copy-links --info=progress2 boot/* mnt
     sync
     ( guestunmount mnt/ & tail --pid=`cat .guestfspid` -f /dev/null )
     rm .guestfspid
