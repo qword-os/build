@@ -1,3 +1,6 @@
+/qword
+/qword.hdd
+/boot/qword.bin
 /ports
 /mlibc
 
@@ -5,20 +8,3 @@
 !/root/etc
 /root/etc/localtime
 !/root/root
-
-# Executables
-/**/*.bin
-/**/*.elf
-
-# Packages.
-/**/*.tar.bz2
-/**/*.tar.gz
-
-# Produced images and qword
-/qword
-/qword.hdd
-
-# Toolchain.
-/host/echfs
-/host/toolchain/build-toolchain
-/host/toolchain/cross-root
