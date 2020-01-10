@@ -28,15 +28,9 @@ sources:
       - args: ['autoconf']
         workdir: '@THIS_SOURCE_DIR@/libstdc++-v3'
 
-  - name: mlibc
-    git: 'https://github.com/managarm/mlibc.git'
+  - name: lvlibc
+    git: 'https://github.com/qword-os/lvlibc.git'
     branch: 'master'
-    sources_required:
-      - cxxshim
-      - frigg
-    regenerate:
-      - args: ['ln', '-sf', '@SOURCE_ROOT@/ports/cxxshim', '@THIS_SOURCE_DIR@/subprojects/cxxshim']
-      - args: ['ln', '-sf', '@SOURCE_ROOT@/ports/frigg', '@THIS_SOURCE_DIR@/subprojects/frigg']
 
 tools:
   - name: host-autoconf-v2.69
@@ -159,6 +153,7 @@ tools:
         - '--prefix=@PREFIX@'
         - '--target=x86_64-qword'
         - '--with-sysroot=@SYSROOT_DIR@'
+        - '--disable-shared'
         # On recent compilers, binutils 2.26 causes implicit-fallthrough warnings, among others.
         - '--disable-werror'
         # -g blows up the binary size.
@@ -182,13 +177,14 @@ tools:
         - '--enable-languages=c,c++'
         - '--disable-multilib'
         - '--enable-initfini-array'
+        - '--disable-shared'
         # -g blows up GCC's binary size.
         - 'CFLAGS=-O2'
         - 'CXXFLAGS=-O2'
     stages:
       - name: compiler
         pkgs_required:
-         - mlibc-headers
+         - lvlibc-headers
         compile:
           # GCC complains if the include directory is non-existant.
           - args: ['mkdir', '-p', '@SYSROOT_DIR@/usr/include']
@@ -207,94 +203,46 @@ tools:
           - tool: system-gcc
             stage_dependencies: [compiler]
         pkgs_required:
-         - mlibc
+         - lvlibc
         compile:
           - args: ['make', '-j@PARALLELISM@', 'all-target-libgcc']
         install:
           - args: ['make', 'install-target-libgcc']
-      - name: libstdc++
-        tools_required:
-          - tool: system-gcc
-            stage_dependencies: [libgcc]
-        compile:
-          - args: ['make', '-j@PARALLELISM@', 'all-target-libstdc++-v3']
-        install:
-          - args: ['make', 'install-target-libstdc++-v3']
 
 packages:
-  - name: mlibc-headers
-    from_source: mlibc
+  - name: lvlibc-headers
+    from_source: lvlibc
     implict_package: true
     configure:
       - args:
-        - 'meson'
-        - '--cross-file'
-        - '@SOURCE_ROOT@/cross_file.txt'
+        - './configure'
         - '--prefix=/usr'
-        - '@THIS_SOURCE_DIR@'
-        - '-Dheaders_only=true'
+        - '--target=qword'
+        workdir: '@THIS_SOURCE_DIR@'
     build:
-      - args: ['ninja']
-      - args: ['ninja', 'install']
-        environ:
-          DESTDIR: '@THIS_COLLECT_DIR@'
+      - args: ['make', 'install-headers', 'DESTDIR=@THIS_COLLECT_DIR@']
+        workdir: '@THIS_SOURCE_DIR@'
         quiet: true
 
-  - name: mlibc
-    from_source: mlibc
+  - name: lvlibc
+    from_source: lvlibc
     tools_required:
       - tool: system-gcc
         stage_dependencies: [compiler]
     implict_package: true
     pkgs_required:
-      - mlibc-headers
+      - lvlibc-headers
     configure:
       - args:
-        - 'meson'
-        - '--cross-file'
-        - '@SOURCE_ROOT@/cross_file.txt'
+        - './configure'
         - '--prefix=/usr'
-        - '--libdir=lib'
-        - '--buildtype=debugoptimized'
-        - '-Dmlibc_no_headers=true'
-        - '@THIS_SOURCE_DIR@'
+        - '--target=qword'
+        workdir: '@THIS_SOURCE_DIR@'
     build:
-      - args: ['ninja']
-      - args: ['ninja', 'install']
-        environ:
-          DESTDIR: '@THIS_COLLECT_DIR@'
-        quiet: true
-      - args: ['ln', '-sf', 'crt0.o', '@THIS_COLLECT_DIR@/usr/lib/crt1.o']
-
-  - name: cxxshim
-    source:
-      subdir: 'ports'
-      git: 'https://github.com/managarm/cxxshim.git'
-      branch: 'master'
-    configure: []
-    build: []
-
-  - name: frigg
-    source:
-      subdir: 'ports'
-      git: 'https://github.com/managarm/frigg.git'
-      branch: 'master'
-    tools_required:
-      - system-gcc
-    configure:
-      - args:
-        - 'meson'
-        - '--cross-file'
-        - '@SOURCE_ROOT@/cross_file.txt'
-        - '--prefix=/usr'
-        - '--libdir=lib'
-        - '--buildtype=debugoptimized'
-        - '@THIS_SOURCE_DIR@'
-    build:
-      - args: ['ninja']
-      - args: ['ninja', 'install']
-        environ:
-          DESTDIR: '@THIS_COLLECT_DIR@'
+      - args: ['make']
+        workdir: '@THIS_SOURCE_DIR@'
+      - args: ['make', 'install', 'DESTDIR=@THIS_COLLECT_DIR@']
+        workdir: '@THIS_SOURCE_DIR@'
         quiet: true
 
   - name: bash
@@ -334,6 +282,7 @@ packages:
         - '--prefix=/usr'
         - '--target=x86_64-qword'
         - '--with-sysroot=/'
+        - '--disable-shared'
         - '--disable-nls'
         # On recent compilers, binutils 2.26 causes implicit-fallthrough warnings, among others.
         - '--disable-werror'
@@ -403,13 +352,14 @@ packages:
         - '--enable-initfini-array'
         - '--disable-multilib'
         - '--disable-nls'
+        - '--disable-shared'
         # -g blows up GCC's binary size.
         - 'CFLAGS=-O2'
         - 'CXXFLAGS=-O2'
     build:
       #- args: ['make', '-j@PARALLELISM@', 'all-gcc']
-      - args: ['make', 'all-gcc', 'all-target-libgcc', 'all-target-libstdc++-v3']
-      - args: ['make', 'install-gcc', 'install-target-libgcc', 'install-target-libstdc++-v3']
+      - args: ['make', 'all-gcc', 'all-target-libgcc']
+      - args: ['make', 'install-gcc', 'install-target-libgcc']
         environ:
           DESTDIR: '@THIS_COLLECT_DIR@'
         quiet: true

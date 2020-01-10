@@ -2,7 +2,7 @@
 /qword.hdd
 /boot/qword.bin
 /ports
-/mlibc
+/lvlibc
 
 /root/*
 !/root/etc

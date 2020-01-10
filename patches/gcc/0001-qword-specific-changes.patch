@@ -57,13 +57,13 @@ index ddd3b8f4d..279dffdb5 100644
    target_has_targetdm=yes
    ;;
 +*-*-qword*)
-+  extra_options="$extra_options gnu-user.opt"
++
 +  gas=yes
 +  gnu_ld=yes
 +  default_use_cxa_atexit=yes
-+  use_gcc_stdint=wrap
-+  tmake_file="${tmake_file} t-slibgcc"
-+  thread_file='posix'
++  use_gcc_stdint=provide
++
++
 +  ;;
  *-*-netbsd*)
    tm_p_file="${tm_p_file} netbsd-protos.h"
@@ -73,7 +73,7 @@ index ddd3b8f4d..279dffdb5 100644
  	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h newlib-stdint.h i386/i386elf.h i386/x86-64.h fuchsia.h"
  	;;
 +x86_64-*-qword*)
-+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h gnu-user.h glibc-stdint.h i386/x86-64.h i386/gnu-user-common.h i386/gnu-user64.h qword.h"
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h glibc-stdint.h i386/x86-64.h qword.h"
 +	;;
  ia64*-*-elf*)
  	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h ia64/sysv4.h ia64/elf.h"
@@ -88,21 +88,21 @@ index 000000000..204519a3d
 +#define TARGET_QWORD 1
 +
 +#undef LIB_SPEC
-+#define LIB_SPEC "-lc -lm"
++#define LIB_SPEC "-l:libc.a"
 +
 +#undef STARTFILE_SPEC
-+#define STARTFILE_SPEC "%{!shared:crt0.o%s} crti.o%s %{shared:crtbeginS.o%s;:crtbegin.o%s}"
++#define STARTFILE_SPEC "crt0.o%s"
 +
 +#undef ENDFILE_SPEC
-+#define ENDFILE_SPEC "%{shared:crtendS.o%s;:crtend.o%s} crtn.o%s"
++#define ENDFILE_SPEC ""
 +
-+#define GNU_USER_LINK_EMULATION32 "elf_i386"
-+#define GNU_USER_LINK_EMULATION64 "elf_x86_64"
-+#define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
 +
-+#define GNU_USER_DYNAMIC_LINKER32 "/lib/ld_i386.so"
-+#define GNU_USER_DYNAMIC_LINKER64 "/lib/ld.so"
-+#define GNU_USER_DYNAMIC_LINKERX32 "/lib/ld32.so"
++
++
++
++
++
++
 +
 +#undef TARGET_OS_CPP_BUILTINS
 +#define TARGET_OS_CPP_BUILTINS() \
@@ -122,9 +122,9 @@ index 91abc84da..f741f319d 100644
    extra_parts="crtbegin.o crtend.o"
    ;;
 +*-*-qword*)
-+  extra_parts="$extra_parts crti.o crtbegin.o crtbeginS.o crtend.o crtendS.o crtn.o"
++  extra_parts="$extra_parts"
 +  tmake_file="$tmake_file t-crtstuff-pic"
-+  tmake_file="$tmake_file t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver t-libgcc-pic"
++  tmake_file="$tmake_file t-libgcc-pic"
 +  ;;
  *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu)
    tmake_file="$tmake_file t-crtstuff-pic t-libgcc-pic t-eh-dw2-dip t-slibgcc t-slibgcc-gld t-slibgcc-elf-ver t-linux"
@@ -157,38 +157,6 @@ index 344eec09d..e45766b5e 100644
    *-mingw32*)
      GLIBCXX_CHECK_LINKER_FEATURES
      GLIBCXX_CHECK_MATH_SUPPORT
-diff --git a/libtool.m4 b/libtool.m4
-index 896676288..8f5f9e4b8 100644
---- a/libtool.m4
-+++ b/libtool.m4
-@@ -2494,6 +2494,16 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
-   dynamic_linker='GNU/Linux ld.so'
-   ;;
- 
-+qword*)
-+  version_type=linux
-+  need_lib_prefix=no
-+  need_version=no
-+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
-+  soname_spec='${libname}${release}${shared_ext}$major'
-+  shlibpath_var=LD_LIBRARY_PATH
-+  hardcode_into_libs=yes
-+  ;;
-+
- netbsd*)
-   version_type=sunos
-   need_lib_prefix=no
-@@ -3093,6 +3103,10 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
-   lt_cv_deplibs_check_method=pass_all
-   ;;
- 
-+qword*)
-+  lt_cv_deplibs_check_method=pass_all
-+  ;;
-+
- netbsd*)
-   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
-     lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
 -- 
 2.24.1
 
