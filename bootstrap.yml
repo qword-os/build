@@ -15,7 +15,7 @@ sources:
   - name: gcc
     subdir: 'ports'
     git: 'git://gcc.gnu.org/git/gcc.git'
-    tag: 'gcc-9_2_0-release'
+    tag: 'releases/gcc-9.2.0'
     tools_required:
       - host-autoconf-v2.69
       - host-automake-v1.11
