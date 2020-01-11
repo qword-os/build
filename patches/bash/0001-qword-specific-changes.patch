@@ -1,19 +1,20 @@
-From f74da192b4cf6c272d0e03798486e6f10b19d486 Mon Sep 17 00:00:00 2001
+From 6eb4da5b03a9764c7e2c9bb2abdb1978d80ff8b1 Mon Sep 17 00:00:00 2001
 From: mintsuki <mintsuki@protonmail.com>
-Date: Sat, 4 Jan 2020 15:24:14 +0100
-Subject: [PATCH] qword-specific-changes
+Date: Sat, 11 Jan 2020 17:09:31 +0100
+Subject: [PATCH] qword specific changes
 
 ---
  builtins/psize.c      | 19 +++--------------
  lib/termcap/termcap.c |  2 +-
  mksyntax.c            | 48 ++-----------------------------------------
+ print_cmd.c           |  2 +-
  shell.c               |  4 ++--
  support/bashversion.c |  7 ++-----
  support/config.sub    |  2 +-
  support/man2html.c    |  5 +++--
  support/mksignames.c  |  2 --
  support/signames.c    |  2 --
- 9 files changed, 14 insertions(+), 77 deletions(-)
+ 10 files changed, 15 insertions(+), 78 deletions(-)
 
 diff --git a/builtins/psize.c b/builtins/psize.c
 index 30881fb..be9c84b 100644
@@ -144,6 +145,19 @@ index 0385686..1a73eca 100644
 -    }
 -}
 -#endif /* HAVE_STRERROR */
+diff --git a/print_cmd.c b/print_cmd.c
+index 9aa6557..eb43c09 100644
+--- a/print_cmd.c
++++ b/print_cmd.c
+@@ -1580,7 +1580,7 @@ the_printed_command_resize (length)
+     }
+ }
+ 
+-#if defined (HAVE_VPRINTF)
++#if 1 //defined (HAVE_VPRINTF)
+ /* ``If vprintf is available, you may assume that vfprintf and vsprintf are
+      also available.'' */
+ 
 diff --git a/shell.c b/shell.c
 index a2b2a55..b7c0ab0 100644
 --- a/shell.c
