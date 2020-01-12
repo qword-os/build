@@ -409,7 +409,7 @@ packages:
         - 'CXXFLAGS=-O2'
     build:
       #- args: ['make', '-j@PARALLELISM@', 'all-gcc']
-      - args: ['make', 'all-gcc', 'all-target-libgcc', 'all-target-libstdc++-v3']
+      - args: ['make', '-j@PARALLELISM@', 'all-gcc', 'all-target-libgcc', 'all-target-libstdc++-v3']
       - args: ['make', 'install-gcc', 'install-target-libgcc', 'install-target-libstdc++-v3']
         environ:
           DESTDIR: '@THIS_COLLECT_DIR@'
