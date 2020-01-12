@@ -2,6 +2,9 @@
 
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
+## Discord
+Join our Discord! Invite: https://discord.gg/z6b3qZC
+
 ## Prebuilt image
 Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd.xz
 
