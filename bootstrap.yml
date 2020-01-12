@@ -27,6 +27,8 @@ sources:
         workdir: '@THIS_SOURCE_DIR@/gcc'
       - args: ['autoconf']
         workdir: '@THIS_SOURCE_DIR@/libstdc++-v3'
+      - args: ['sh', '-c', 'patch -p1 < ../../extra-patches/gcc.patch']
+        workdir: '@THIS_SOURCE_DIR@'
 
   - name: mlibc
     git: 'https://github.com/managarm/mlibc.git'
@@ -387,7 +389,6 @@ packages:
         quiet: true
 
   - name: gcc
-    default: false
     from_source: gcc
     tools_required:
       - tool: system-gcc
