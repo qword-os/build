@@ -1,10 +1,11 @@
-From 6eb4da5b03a9764c7e2c9bb2abdb1978d80ff8b1 Mon Sep 17 00:00:00 2001
+From 4c81f08c35cae9933700d70c22ddb805b3fbcc43 Mon Sep 17 00:00:00 2001
 From: mintsuki <mintsuki@protonmail.com>
-Date: Sat, 11 Jan 2020 17:09:31 +0100
+Date: Mon, 13 Jan 2020 03:09:36 +0100
 Subject: [PATCH] qword specific changes
 
 ---
  builtins/psize.c      | 19 +++--------------
+ include/shtty.h       | 24 +++-------------------
  lib/termcap/termcap.c |  2 +-
  mksyntax.c            | 48 ++-----------------------------------------
  print_cmd.c           |  2 +-
@@ -14,7 +15,7 @@ Subject: [PATCH] qword specific changes
  support/man2html.c    |  5 +++--
  support/mksignames.c  |  2 --
  support/signames.c    |  2 --
- 10 files changed, 15 insertions(+), 78 deletions(-)
+ 11 files changed, 18 insertions(+), 99 deletions(-)
 
 diff --git a/builtins/psize.c b/builtins/psize.c
 index 30881fb..be9c84b 100644
@@ -57,6 +58,41 @@ index 30881fb..be9c84b 100644
  sigpipe (sig)
       int sig;
  {
+diff --git a/include/shtty.h b/include/shtty.h
+index 66500d9..c1145e4 100644
+--- a/include/shtty.h
++++ b/include/shtty.h
+@@ -41,27 +41,9 @@
+  * between sys/ioctl.h and termios.h.  Ditto for the test against SunOS4
+  * and the undefining of several symbols.
+  */
+-      
+-#ifdef TERMIOS_TTY_DRIVER
+-#  if (defined (SunOS4) || defined (SunOS5)) && !defined (_POSIX_SOURCE)
+-#    define _POSIX_SOURCE
+-#  endif
+-#  if defined (SunOS4)
+-#    undef ECHO
+-#    undef NOFLSH
+-#    undef TOSTOP
+-#  endif /* SunOS4 */
+-#  include <termios.h>
+-#  define TTYSTRUCT struct termios
+-#else
+-#  ifdef TERMIO_TTY_DRIVER
+-#    include <termio.h>
+-#    define TTYSTRUCT struct termio
+-#  else	/* NEW_TTY_DRIVER */
+-#    include <sgtty.h>
+-#    define TTYSTRUCT struct sgttyb
+-#  endif
+-#endif
++
++#include <termios.h>
++#define TTYSTRUCT struct termios
+ 
+ /* Functions imported from lib/sh/shtty.c */
+ 
 diff --git a/lib/termcap/termcap.c b/lib/termcap/termcap.c
 index ba3dab2..2882f0c 100644
 --- a/lib/termcap/termcap.c
