@@ -3,8 +3,11 @@
 /boot/qword.bin
 /ports
 /mlibc
+/mnt
+/qloader2
 
 /root/*
 !/root/etc
 /root/etc/localtime
 !/root/root
+!/root/qloader2.cfg

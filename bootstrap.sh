@@ -37,44 +37,36 @@ PATH="$BUILD_DIR/tools/system-gcc/bin:$PATH"
 set -x
 
 [ -d "$QWORD_DIR" ] || git clone "$QWORD_REPO" "$QWORD_DIR"
+make -C "$QWORD_DIR"
 
-make -C "$QWORD_DIR" install CC=x86_64-qword-gcc PREFIX="$(realpath ./)"
+# Download and build qloader2's toolchain
+if ! [ -d qloader2 ]; then
+    git clone https://github.com/qword-os/qloader2.git
+    ( cd qloader2/toolchain && ./make_toolchain.sh "$MAKEFLAGS" )
+fi
 
 if [ "$OS" = "Linux" ]; then
     if ! [ -f ./qword.hdd ]; then
-        sudo -v
-        dd if=/dev/zero bs=1M count=0 seek=$(( $IMGSIZE + 80 )) of=qword.hdd
-        sudo losetup -Pf --show qword.hdd > .loopdev
+        dd if=/dev/zero bs=1M count=0 seek=$IMGSIZE of=qword.hdd
 
-        sudo parted -s `cat .loopdev` mklabel msdos
-        sudo parted -s `cat .loopdev` mkpart primary 1 80
-        sudo parted -s `cat .loopdev` mkpart primary 81 100%
+        parted -s qword.hdd mklabel msdos
+        parted -s qword.hdd mkpart primary 1 100%
 
-        sudo echfs-utils `cat .loopdev`p2 quick-format 32768
-
-        sudo mkdir -p mnt
-
-        sudo mkfs.fat `cat .loopdev`p1
-        sudo mount `cat .loopdev`p1 ./mnt
-
-        sudo grub-install --target=i386-pc --boot-directory=`realpath ./mnt` `cat .loopdev`
-        sudo sync
-        sudo umount `cat .loopdev`p1
-
-        sudo rm -rf mnt
-
-        sudo losetup -d `cat .loopdev`
-        rm .loopdev
+        echfs-utils -m -p0 qword.hdd quick-format 32768
     fi
 
+    # Install qloader2
+    ( cd qloader2 && make && ./qloader2-install ../qword.hdd )
+
     # Prepare root
+    install -m 644 qword/qword.bin root/
     install -m 644 /etc/localtime root/etc/
     install -d root/lib
     install "$BUILD_DIR/system-root/usr/lib/ld.so" root/lib/
 
     mkdir -p mnt
 
-    echfs-fuse --mbr -p1 qword.hdd mnt
+    echfs-fuse --mbr -p0 qword.hdd mnt
     while ! rsync -ru --copy-links --info=progress2 "$BUILD_DIR"/system-root/* mnt; do
         true
     done # FIXME: This while loop only exists because of an issue in echfs-fuse that makes it fail randomly.
@@ -82,12 +74,6 @@ if [ "$OS" = "Linux" ]; then
     rsync -ru --copy-links --info=progress2 root/* mnt
     sync
     fusermount -u mnt/
-
-    guestmount --pid-file .guestfspid -a qword.hdd -m /dev/sda1 mnt/
-    rsync -ru --copy-links --info=progress2 boot/* mnt
-    sync
-    ( guestunmount mnt/ & tail --pid=`cat .guestfspid` -f /dev/null )
-    rm .guestfspid
 
     rm -rf ./mnt
 elif [ "$OS" = "FreeBSD" ]; then
