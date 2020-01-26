@@ -37,7 +37,7 @@ PATH="$BUILD_DIR/tools/system-gcc/bin:$PATH"
 set -x
 
 [ -d "$QWORD_DIR" ] || git clone "$QWORD_REPO" "$QWORD_DIR"
-make -C "$QWORD_DIR"
+make -C "$QWORD_DIR" CC="x86_64-qword-gcc"
 
 # Download and build qloader2's toolchain
 if ! [ -d qloader2 ]; then
