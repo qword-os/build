@@ -56,6 +56,8 @@ xbstrap install --all
 cd ../qword-bootstrap
 # Create the image using the bootstrap.sh script
 MAKEFLAGS="-j4" ./bootstrap.sh ../build
+# If your platform doesnt support fuse, you can use.
+# MAKEFLAGS="-j4" USE_FUSE=no ./bootstrap.sh ../build
 # And now if you wanna test it in qemu simply run
 ./run.sh
 # If that doesn't work because you don't have hardware virtualisation/KVM, run

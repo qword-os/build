@@ -45,27 +45,30 @@ if ! [ -d qloader2 ]; then
     ( cd qloader2/toolchain && ./make_toolchain.sh "$MAKEFLAGS" )
 fi
 
-if [ "$OS" = "Linux" ]; then
-    if ! [ -f ./qword.hdd ]; then
-        dd if=/dev/zero bs=1M count=0 seek=$IMGSIZE of=qword.hdd
+if ! [ -f ./qword.hdd ]; then
+    dd if=/dev/zero bs=1M count=0 seek=$IMGSIZE of=qword.hdd
 
-        parted -s qword.hdd mklabel msdos
-        parted -s qword.hdd mkpart primary 1 100%
+    parted -s qword.hdd mklabel msdos
+    parted -s qword.hdd mkpart primary 1 100%
 
-        echfs-utils -m -p0 qword.hdd quick-format 32768
-    fi
+    echfs-utils -m -p0 qword.hdd quick-format 32768
+fi
 
-    # Install qloader2
-    ( cd qloader2 && make && ./qloader2-install ../qword.hdd )
+# Install qloader2
+( cd qloader2 && make && ./qloader2-install ../qword.hdd )
 
-    # Prepare root
-    install -m 644 qword/qword.bin root/
-    install -m 644 /etc/localtime root/etc/
-    install -d root/lib
-    install "$BUILD_DIR/system-root/usr/lib/ld.so" root/lib/
+# Prepare root
+install -m 644 qword/qword.bin root/
+install -m 644 /etc/localtime root/etc/
+install -d root/lib
+install "$BUILD_DIR/system-root/usr/lib/ld.so" root/lib/
 
-    mkdir -p mnt
+mkdir -p mnt
 
+if [ "$USE_FUSE" = "no" ]; then
+    ./copy-root-to-img.sh "$BUILD_DIR"/system-root qword.hdd 0
+    ./copy-root-to-img.sh root qword.hdd 0
+else
     echfs-fuse --mbr -p0 qword.hdd mnt
     while ! rsync -ru --copy-links --info=progress2 "$BUILD_DIR"/system-root/* mnt; do
         true
@@ -74,9 +77,5 @@ if [ "$OS" = "Linux" ]; then
     rsync -ru --copy-links --info=progress2 root/* mnt
     sync
     fusermount -u mnt/
-
     rm -rf ./mnt
-elif [ "$OS" = "FreeBSD" ]; then
-    echo "TODO: Add FreeBSD build instructions."
-    exit 1
 fi

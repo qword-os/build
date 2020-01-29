@@ -2,8 +2,8 @@
 
 set -e
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <source directory> <image>"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <source directory> <image> <partition number>"
     exit 1
 fi
 
@@ -37,7 +37,7 @@ FILES_COUNTER=1
 for i in $ROOT_FILES; do
     printf "\r\e[KFile $FILES_COUNTER/$ROOT_FILES_COUNT ($i)"
     echo $(( FILES_COUNTER++ )) > /dev/null
-    echfs-utils "$IMAGE_REALPATH" import "$i" "$i" &> /dev/null
+    echfs-utils -m -p$3 "$IMAGE_REALPATH" import "$i" "$i" &> /dev/null
 done
 
 printf "\nDone.\n"
