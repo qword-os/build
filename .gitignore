@@ -5,6 +5,8 @@
 /mlibc
 /mnt
 /qloader2
+/echfs
+/build
 
 /root/*
 !/root/etc
