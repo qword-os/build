@@ -58,7 +58,7 @@ fi
 ( cd qloader2 && make && ./qloader2-install ../qword.hdd )
 
 # Prepare root
-install -m 644 qword/qword.bin root/
+install -m 644 qword/qword.elf root/
 install -m 644 /etc/localtime root/etc/
 install -d root/lib
 install "$BUILD_DIR/system-root/usr/lib/ld.so" root/lib/

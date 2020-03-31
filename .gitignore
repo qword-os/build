@@ -1,6 +1,6 @@
 /qword
 /qword.hdd
-/boot/qword.bin
+/boot/qword.elf
 /ports
 /mlibc
 /mnt
