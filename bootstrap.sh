@@ -39,12 +39,6 @@ set -x
 [ -d "$QWORD_DIR" ] || git clone "$QWORD_REPO" "$QWORD_DIR"
 make -C "$QWORD_DIR" CC="x86_64-qword-gcc"
 
-# Download and build qloader2's toolchain
-if ! [ -d qloader2 ]; then
-    git clone https://github.com/qword-os/qloader2.git
-    ( cd qloader2/toolchain && ./make_toolchain.sh "$MAKEFLAGS" )
-fi
-
 if ! [ -f ./qword.hdd ]; then
     dd if=/dev/zero bs=1M count=0 seek=$IMGSIZE of=qword.hdd
 
@@ -55,7 +49,10 @@ if ! [ -f ./qword.hdd ]; then
 fi
 
 # Install qloader2
-( cd qloader2 && make && ./qloader2-install ../qword.hdd )
+if ! [ -d qloader2 ]; then
+    git clone https://github.com/qword-os/qloader2.git
+fi
+qloader2/qloader2-install qloader2/qloader2.bin qword.hdd
 
 # Prepare root
 install -m 644 qword/qword.elf root/
