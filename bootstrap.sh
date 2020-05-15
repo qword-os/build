@@ -50,7 +50,7 @@ fi
 
 # Install qloader2
 if ! [ -d qloader2 ]; then
-    git clone https://github.com/qword-os/qloader2.git
+    git clone https://github.com/qloader2/qloader2.git
 fi
 qloader2/qloader2-install qloader2/qloader2.bin qword.hdd
 
