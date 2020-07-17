@@ -361,7 +361,10 @@ packages:
         - args: ['cp',
             '@BUILD_ROOT@/tools/host-automake-v1.11/share/automake-1.11/config.sub',
             '@THIS_SOURCE_DIR@/build-aux/']
-        - args: ['sed', '-i', 's/.*could not determine how to read list of mounted file systems.*/true/', 'configure']
+        - args: ['sh', '-c', "sed 's/.*could not determine how to read list of mounted file systems.*/true/' < configure > configure.sed"]
+        - args: ['rm', '-f', 'configure']
+        - args: ['mv', 'configure.sed', 'configure']
+        - args: ['chmod', '+x', 'configure']
     tools_required:
       - system-gcc
     configure:
