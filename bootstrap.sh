@@ -11,7 +11,7 @@ fi
 
 # Accepted host OSes else fail.
 OS=$(uname)
-if ! [ "$OS" = "Linux" ] || [ "$OS" = "FreeBSD" ]; then
+if ! [ "$OS" = "Linux" ] && ! [ "$OS" = "FreeBSD" ]; then
     echo "Host OS \"$OS\" is not supported."
     exit 1
 fi
@@ -26,8 +26,8 @@ fi
 # Make sure BUILD_DIR is absolute
 BUILD_DIR="$(realpath $1)"
 
-# Qword repo
-QWORD_DIR="$(realpath ./qword)"
+# qword repo
+QWORD_DIR="$(pwd)/qword"
 QWORD_REPO=https://github.com/qword-os/qword.git
 
 # Add toolchain to PATH
@@ -42,8 +42,18 @@ make -C "$QWORD_DIR" CC="x86_64-qword-gcc"
 if ! [ -f ./qword.hdd ]; then
     dd if=/dev/zero bs=1M count=0 seek=$IMGSIZE of=qword.hdd
 
-    parted -s qword.hdd mklabel msdos
-    parted -s qword.hdd mkpart primary 1 100%
+    case "$OS" in
+        "FreeBSD")
+            sudo mdconfig -a -t vnode -f qword.hdd -u md9
+            sudo gpart create -s mbr md9
+            sudo gpart add -a 4k -t '!14' md9
+            sudo mdconfig -d -u md9
+            ;;
+        "Linux")
+            parted -s qword.hdd mklabel msdos
+            parted -s qword.hdd mkpart primary 1 100%
+            ;;
+    esac
 
     echfs-utils -m -p0 qword.hdd quick-format 32768
 fi
