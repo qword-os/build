@@ -58,11 +58,12 @@ if ! [ -f ./qword.hdd ]; then
     echfs-utils -m -p0 qword.hdd quick-format 32768
 fi
 
-# Install qloader2
-if ! [ -d qloader2 ]; then
-    git clone https://github.com/qloader2/qloader2.git
+# Install limine
+if ! [ -d limine ]; then
+    git clone https://github.com/limine-bootloader/limine.git
 fi
-qloader2/qloader2-install qloader2/qloader2.bin qword.hdd
+make -C limine limine-install
+limine/limine-install limine/limine.bin qword.hdd
 
 # Prepare root
 install -m 644 qword/qword.elf root/

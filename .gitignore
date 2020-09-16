@@ -4,7 +4,7 @@
 /ports
 /mlibc
 /mnt
-/qloader2
+/limine
 /echfs
 /build
 
@@ -12,4 +12,4 @@
 !/root/etc
 /root/etc/localtime
 !/root/root
-!/root/qloader2.cfg
+!/root/limine.cfg
