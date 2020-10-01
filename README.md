@@ -3,22 +3,7 @@
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
 ## Discord
-Join our Discord! Invite: https://discord.gg/z6b3qZC
-
-## Prebuilt image
-Get a prebuilt image today at: https://ci.oogacraft.com/job/qword/lastSuccessfulBuild/artifact/qword.hdd.xz
-
-Note 1: This is a hard drive image compressed with xz. Unpack it with
-```bash
-xzcat < qword.hdd.xz > qword.hdd
-```
-
-Note 2: This image can be ran on QEMU using the provided `run.sh` script
-```bash
-./run.sh qword.hdd
-```
-
-Note 3: The default user/password is 'root/root'.
+Join our Discord! Invite: https://discord.gg/YWdGJEu
 
 ## Build requirements
 In order to build qword, make sure to have the following installed:
