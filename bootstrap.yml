@@ -59,7 +59,7 @@ tools:
     source:
       name: automake-v1.11
       subdir: 'ports'
-      git: 'https://git.savannah.gnu.org/r/automake.git'
+      git: 'https://git.savannah.gnu.org/git/automake.git'
       tag: 'v1.11.6'
       tools_required:
         - host-autoconf-v2.69
@@ -83,7 +83,7 @@ tools:
     source:
         name: automake-v1.15
         subdir: 'ports'
-        git: 'https://git.savannah.gnu.org/r/automake.git'
+        git: 'https://git.savannah.gnu.org/git/automake.git'
         tag: 'v1.15.1'
         tools_required:
           - host-autoconf-v2.69
@@ -108,7 +108,7 @@ tools:
     source:
       name: libtool
       subdir: 'ports'
-      git: 'https://git.savannah.gnu.org/r/libtool.git'
+      git: 'https://git.savannah.gnu.org/git/libtool.git'
       tag: 'v2.4.5'
       tools_required:
         - host-autoconf-v2.69
@@ -301,7 +301,7 @@ packages:
   - name: bash
     source:
       subdir: 'ports'
-      git: 'https://git.savannah.gnu.org/r/bash.git'
+      git: 'https://git.savannah.gnu.org/git/bash.git'
       tag: 'bash-5.0'
       tools_required:
         - host-autoconf-v2.69
@@ -350,7 +350,7 @@ packages:
   - name: coreutils
     source:
       subdir: 'ports'
-      git: 'https://git.savannah.gnu.org/r/coreutils.git'
+      git: 'https://git.savannah.gnu.org/git/coreutils.git'
       tag: 'v8.30'
       tools_required:
         - host-autoconf-v2.69
@@ -418,7 +418,7 @@ packages:
   - name: nano
     source:
       subdir: 'ports'
-      git: 'https://git.savannah.gnu.org/r/nano.git'
+      git: 'https://git.savannah.gnu.org/git/nano.git'
       tag: 'v2.9.8'
       tools_required:
         - host-autoconf-v2.69
