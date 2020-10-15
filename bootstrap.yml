@@ -147,6 +147,7 @@ tools:
       - args:
         - '@THIS_SOURCE_DIR@/configure'
         - '--prefix=@PREFIX@'
+        - '--with-internal-glib'
     compile:
       - args: ['make', '-j@PARALLELISM@']
     install:
