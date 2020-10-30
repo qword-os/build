@@ -60,7 +60,7 @@ fi
 
 # Install limine
 if ! [ -d limine ]; then
-    git clone https://github.com/limine-bootloader/limine.git --depth=1 --branch=v0.5
+    git clone https://github.com/limine-bootloader/limine.git --depth=1 --branch=v0.5.7
 fi
 make -C limine limine-install
 limine/limine-install limine/limine.bin qword.hdd
