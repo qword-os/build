@@ -2,8 +2,16 @@
 
 ![Reference screenshot](/screenshot.png?raw=true "Reference screenshot")
 
-## Discord
-Join our Discord! Invite: https://discord.gg/YWdGJEu
+# THIS PROJECT IS DEFUNCT.
+Sorry about that.
+
+Please do not send PRs or open issues against this defunct project which will
+no longer be updated.
+
+You're free to check out the code, fork it, and all that, as long as the license
+(LICENSE.md) is respected.
+
+# Moving on
 
 ## Build requirements
 In order to build qword, make sure to have the following installed:
