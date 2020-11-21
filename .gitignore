@@ -13,3 +13,4 @@
 /root/etc/localtime
 !/root/root
 !/root/limine.cfg
+/mlibc.tar.gz

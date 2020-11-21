@@ -39,16 +39,17 @@ sudo pip3 install xbstrap
 ## Building
 ```bash
 # Clone this repo wherever you like
-git clone https://github.com/qword-os/build.git qword-bootstrap
-# Create and enter a build directory
+git clone https://github.com/qword-os/build.git qword-build
+cd qword-build
+# Create and enter a "build" directory inside
 mkdir build && cd build
 # Initialise xbstrap and start a full build
-xbstrap init ../qword-bootstrap
+xbstrap init ..
 xbstrap install --all
-# Enter the qword-bootstrap directory
-cd ../qword-bootstrap
+# Enter the root directory of the repo
+cd ..
 # Create the image using the bootstrap.sh script
-MAKEFLAGS="-j4" ./bootstrap.sh ../build
+MAKEFLAGS="-j4" ./bootstrap.sh build
 # If your platform doesnt support fuse, you can use.
 # MAKEFLAGS="-j4" USE_FUSE=no ./bootstrap.sh ../build
 # And now if you wanna test it in qemu simply run
@@ -59,8 +60,8 @@ NO_KVM=1 ./run.sh
 
 Some MAKEFLAGS that can be useful are:
 ```bash
-MAKEFLAGS="-j8" ./bootstrap.sh ../build  # For parallelism
-MAKEFLAGS="DBGOUT=qemu -j8" ./bootstrap.sh ../build  # For QEMU console debug output
+MAKEFLAGS="-j8" ./bootstrap.sh build  # For parallelism
+MAKEFLAGS="DBGOUT=qemu -j8" ./bootstrap.sh build  # For QEMU console debug output
 DBGOUT=tty    # For kernel tty debug output
 DBGOUT=both   # For both of the above
 DBGSYM=yes    # For compilation with debug symbols and other debug facilities (can be used in combination with the other options)
